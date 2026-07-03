@@ -14,8 +14,8 @@ interface Props {
 const BULLETS = [
   {
     value: `${peruStats.notHealthy}%`,
-    label: "de peruanos ya tiene el metabolismo dañado, sin saberlo",
-    color: "#E11D48",
+    label: "de peruanos ya tiene el metabolismo dañado",
+    color: "#D97706",
   },
   {
     value: "5 señales",
@@ -43,13 +43,13 @@ export function WelcomeScreen({ onNav, appearance, useImage = false }: Props) {
 
       <div className="flex-1 flex flex-col items-center text-center pt-1">
         <div className="relative">
-          <TwinAvatar mood="tired" size={110} appearance={appearance} useImage={useImage} />
+          <TwinAvatar mood="neutral" size={110} appearance={appearance} useImage={useImage} />
           <div
             className="absolute -right-1 -bottom-1 w-9 h-9 rounded-full flex items-center justify-center"
             style={{
-              backgroundColor: "#E11D48",
+              backgroundColor: "#D97706",
               color: "#FFFFFF",
-              boxShadow: "0 8px 18px #E11D4855",
+              boxShadow: "0 8px 18px #D9770655",
             }}
           >
             <AlertOctagon size={16} strokeWidth={2.5} />
@@ -58,16 +58,16 @@ export function WelcomeScreen({ onNav, appearance, useImage = false }: Props) {
 
         <div
           className="mt-4 px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-[0.2em]"
-          style={{ backgroundColor: "#E11D481f", color: "#E11D48" }}
+          style={{ backgroundColor: "#D977061f", color: "#D97706" }}
         >
-          La mitad de la población está afectada
+          Esta es nuestra realidad en el Perú
         </div>
         <h1 className="text-txt text-[22px] font-extrabold mt-2 leading-tight">
-          El síndrome metabólico avanza en silencio
+          Más de la mitad de nosotros ya está en riesgo, sin saberlo
         </h1>
         <p className="text-sub text-[12.5px] mt-1.5 max-w-[300px] leading-snug">
-          Cuando da síntomas, ya es difícil de revertir. Tu gemelo digital lo detecta antes,
-          para que actúes a tiempo.
+          El síndrome metabólico avanza sin síntomas. Cuando se nota, ya es difícil de
+          revertir. Tu gemelo digital te ayuda a verlo venir.
         </p>
 
         <ul className="mt-4 space-y-2 w-full max-w-[320px]">
