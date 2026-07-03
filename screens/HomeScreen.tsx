@@ -42,10 +42,10 @@ const MEAL_ICONS: Record<MealType, any> = {
   Snack: Apple,
 };
 const MEAL_COLORS: Record<MealType, string> = {
-  Desayuno: "#FBBF24",
-  Almuerzo: "#38BDF8",
-  Cena: "#A78BFA",
-  Snack: "#4ADE80",
+  Desayuno: "#D97706",
+  Almuerzo: "#0284C7",
+  Cena: "#7C3AED",
+  Snack: "#16A34A",
 };
 const MEAL_ORDER: MealType[] = ["Desayuno", "Almuerzo", "Cena", "Snack"];
 
@@ -88,20 +88,46 @@ export function HomeScreen({
         </div>
         <button
           onClick={() => onNav("alerts")}
-          className="relative w-10 h-10 rounded-full bg-white/[0.04] border border-white/[0.08] flex items-center justify-center active:scale-95 transition"
+          className="relative w-10 h-10 rounded-full bg-black/[0.035] border border-black/[0.08] flex items-center justify-center active:scale-95 transition"
         >
           <Bell size={18} className="text-txt" />
           {alertsUnread && (
-            <span className="absolute top-2 right-2.5 w-2 h-2 rounded-full bg-brand-red shadow-[0_0_6px_#FB7185]" />
+            <span className="absolute top-2 right-2.5 w-2 h-2 rounded-full bg-brand-red shadow-[0_0_6px_#E11D48]" />
           )}
         </button>
       </div>
 
+      {/* Recomendación del día — el tip va primero, más grande que el diagnóstico */}
+      <div
+        className="relative rounded-[24px] p-4 shadow-card overflow-hidden active:scale-[0.985] cursor-pointer transition-transform"
+        style={{ background: "linear-gradient(135deg,#3D7BF6,#7C5CF6)" }}
+        onClick={() => onNav("recommendations")}
+      >
+        <div className="flex items-center gap-1.5 text-white/90 text-[11px] font-extrabold uppercase tracking-[0.16em]">
+          <Sparkles size={13} />
+          Tip para hoy
+        </div>
+        <p className="text-white text-[17px] font-extrabold mt-2 leading-tight">
+          {recommendations[0].title}
+        </p>
+        <p className="text-white/85 text-[12.5px] mt-1.5 leading-snug">
+          {recommendations[0].reason}
+        </p>
+        <div className="mt-3 flex items-center justify-between">
+          <span className="text-white/80 text-[11px] font-bold">
+            💎 Tu salud es una joya. Cuídala hoy.
+          </span>
+          <span className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center shrink-0">
+            <ChevronRight size={16} className="text-white" />
+          </span>
+        </div>
+      </div>
+
       {/* ICM hero card */}
       <div
-        className="relative rounded-[24px] border border-white/[0.07] p-4 shadow-card overflow-hidden"
+        className="relative rounded-[24px] border border-black/[0.07] p-4 shadow-card overflow-hidden mt-3"
         style={{
-          background: `radial-gradient(130% 120% at 0% 0%, ${ts.color}1C 0%, transparent 55%), linear-gradient(180deg, #141C30 0%, #111726 100%)`,
+          background: `radial-gradient(130% 120% at 0% 0%, ${ts.color}1C 0%, transparent 55%), linear-gradient(180deg, #EEF3FB 0%, #FFFFFF 100%)`,
           transition: "background 500ms",
         }}
       >
@@ -214,28 +240,28 @@ export function HomeScreen({
                   return (
                     <div
                       key={t}
-                      className="rounded-xl bg-card2 border border-white/[0.08] px-1.5 py-2 text-center relative"
+                      className="rounded-xl bg-card2 border border-black/[0.08] px-1.5 py-2 text-center relative"
                       style={done ? { borderColor: `${color}55`, backgroundColor: `${color}14` } : {}}
                     >
                       <div
                         className="w-7 h-7 mx-auto rounded-lg flex items-center justify-center"
                         style={{
-                          backgroundColor: done ? `${color}33` : "#222C42",
-                          color: done ? color : "#5D6883",
+                          backgroundColor: done ? `${color}33` : "#E3E8F1",
+                          color: done ? color : "#93A0B5",
                         }}
                       >
                         <Icon size={14} />
                       </div>
                       <p
                         className="text-[10px] font-extrabold mt-1"
-                        style={{ color: done ? color : "#94A0B8" }}
+                        style={{ color: done ? color : "#5B6B85" }}
                       >
                         {t}
                       </p>
                       {done && (
                         <span
                           className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-brand-teal text-bg flex items-center justify-center"
-                          style={{ boxShadow: "0 0 0 2px #131A2C" }}
+                          style={{ boxShadow: "0 0 0 2px #FFFFFF" }}
                         >
                           <Check size={9} strokeWidth={3.5} />
                         </span>
@@ -266,32 +292,7 @@ export function HomeScreen({
           </div>
         </div>
         <div className="mt-2">
-          <Sparkline data={glucoseDay} color="#38BDF8" highlightMaxLabel={`${peak}`} />
-        </div>
-      </Card>
-
-      <SectionTitle>Recomendación del día</SectionTitle>
-      <Card accent={recommendations[0].color} onClick={() => onNav("recommendations")}>
-        <div className="flex items-start gap-3">
-          <div
-            className="w-9 h-9 rounded-xl flex items-center justify-center"
-            style={{
-              backgroundColor: `${recommendations[0].color}22`,
-              color: recommendations[0].color,
-            }}
-          >
-            <Sparkles size={16} />
-          </div>
-          <div className="flex-1">
-            <Pill color={recommendations[0].color}>{recommendations[0].tag}</Pill>
-            <p className="text-txt text-[14px] font-extrabold mt-1.5 leading-tight">
-              {recommendations[0].title}
-            </p>
-            <p className="text-sub text-[12px] mt-1 leading-snug">
-              {recommendations[0].reason}
-            </p>
-          </div>
-          <ChevronRight size={18} className="text-sub" />
+          <Sparkline data={glucoseDay} color="#0284C7" highlightMaxLabel={`${peak}`} />
         </div>
       </Card>
     </div>

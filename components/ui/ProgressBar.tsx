@@ -2,7 +2,7 @@
 
 export function ProgressBar({
   value,
-  color = "#60A5FA",
+  color = "#2563EB",
   className = "",
 }: {
   value: number;
@@ -12,7 +12,7 @@ export function ProgressBar({
   const pct = Math.max(0, Math.min(100, value));
   return (
     <div
-      className={`h-1.5 w-full bg-white/[0.06] rounded-full overflow-hidden ${className}`}
+      className={`h-1.5 w-full bg-black/[0.05] rounded-full overflow-hidden ${className}`}
     >
       <div
         className="h-full rounded-full transition-all duration-700 ease-out"

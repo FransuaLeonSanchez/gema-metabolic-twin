@@ -116,8 +116,8 @@ export function ProfileFormScreen({ onNav }: Props) {
         <div
           className="rounded-[20px] p-3 mb-4 flex items-center gap-3 border"
           style={{
-            backgroundColor: "#60A5FA14",
-            borderColor: "#60A5FA55",
+            backgroundColor: "#2563EB14",
+            borderColor: "#2563EB55",
           }}
         >
           <div className="w-10 h-10 rounded-xl bg-brand-blue/20 text-brand-blue flex items-center justify-center">
@@ -203,7 +203,7 @@ export function ProfileFormScreen({ onNav }: Props) {
                     className={`flex-1 h-9 rounded-xl text-[12px] font-extrabold transition ${
                       active
                         ? "bg-brand-gradient text-white shadow-[0_6px_16px_-6px_rgba(99,124,246,0.6)]"
-                        : "bg-card2 text-sub border border-white/[0.08]"
+                        : "bg-card2 text-sub border border-black/[0.08]"
                     }`}
                   >
                     {s}
@@ -251,7 +251,7 @@ export function ProfileFormScreen({ onNav }: Props) {
                     className={`px-3 h-8 rounded-full text-[11.5px] font-extrabold transition ${
                       active
                         ? "bg-brand-gradient text-white shadow-[0_6px_16px_-6px_rgba(99,124,246,0.6)]"
-                        : "bg-card2 text-sub border border-white/[0.08]"
+                        : "bg-card2 text-sub border border-black/[0.08]"
                     }`}
                   >
                     {c}
@@ -274,7 +274,7 @@ export function ProfileFormScreen({ onNav }: Props) {
                   className={`px-3 h-9 rounded-full text-[11.5px] font-extrabold transition inline-flex items-center gap-1.5 ${
                     active
                       ? "bg-brand-gradient text-white shadow-[0_6px_16px_-6px_rgba(99,124,246,0.6)]"
-                      : "bg-card2 text-sub border border-white/[0.08]"
+                      : "bg-card2 text-sub border border-black/[0.08]"
                   }`}
                 >
                   {active && <Check size={12} />}
@@ -295,7 +295,7 @@ export function ProfileFormScreen({ onNav }: Props) {
         </p>
       </div>
 
-      <div className="px-5 pb-5 pt-3 border-t border-white/[0.06] bg-bg/90 backdrop-blur-md">
+      <div className="px-5 pb-5 pt-3 border-t border-black/[0.07] bg-bg/90 backdrop-blur-md">
         <Button onClick={() => onNav("pairDevice")}>
           {isComplete ? "Continuar" : "Continuar (datos opcionales)"}
         </Button>
@@ -358,7 +358,7 @@ function NumberCell({
   suffix: string;
 }) {
   return (
-    <div className="rounded-xl border border-white/[0.08] bg-card2 px-2.5 py-2">
+    <div className="rounded-xl border border-black/[0.08] bg-card2 px-2.5 py-2">
       <p className="text-hint text-[9px] uppercase tracking-wider font-bold inline-flex items-center gap-1">
         {icon}
         {label}

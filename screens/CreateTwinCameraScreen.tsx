@@ -37,19 +37,19 @@ const GALLERY_ITEMS = [
   { id: "p11",  src: null },
 ];
 
-// Placeholder gradient pairs for visual variety in the fake gallery
+// Placeholder gradient pairs for visual variety in the fake gallery (light theme)
 const PH_COLORS = [
-  ["#1A2030","#0F1525"],
-  ["#1C1A2E","#0F0E1A"],
-  ["#1E1A1A","#150F0F"],
-  ["#1A1E1A","#0F150F"],
-  ["#1E1C14","#15120A"],
-  ["#1A1E2A","#0F1520"],
-  ["#1E1A26","#150F1A"],
-  ["#141E1E","#0A1515"],
-  ["#1E1A18","#150F0E"],
-  ["#141820","#0A0F15"],
-  ["#1A1814","#110F0A"],
+  ["#E9EEF7","#F6F8FC"],
+  ["#EFEBF7","#F7F4FB"],
+  ["#F5ECEC","#FBF5F5"],
+  ["#EBF2EC","#F5FAF6"],
+  ["#F2EFE7","#FAF7F0"],
+  ["#E9EEF6","#F4F7FB"],
+  ["#F1EBF5","#F9F4FB"],
+  ["#E7F2F1","#F2FAF9"],
+  ["#F3ECE9","#FAF5F2"],
+  ["#EAEDF2","#F5F7FA"],
+  ["#F1EEE8","#FAF7F1"],
 ];
 
 type Mode = "choose" | "camera" | "gallery";
@@ -155,8 +155,8 @@ export function CreateTwinCameraScreen({ onNav, setUserPhoto }: Props) {
                   onClick={() => item.src && setSelected(item.src)}
                   className="relative aspect-square rounded-xl overflow-hidden border-2 transition-all active:scale-[0.97]"
                   style={{
-                    borderColor: isSelected ? "#60A5FA" : "transparent",
-                    boxShadow: isSelected ? "0 0 0 1px #60A5FA" : "none",
+                    borderColor: isSelected ? "#2563EB" : "transparent",
+                    boxShadow: isSelected ? "0 0 0 1px #2563EB" : "none",
                   }}
                   disabled={!item.src}
                 >
@@ -196,7 +196,7 @@ export function CreateTwinCameraScreen({ onNav, setUserPhoto }: Props) {
         </div>
 
         {selected && (
-          <div className="px-5 py-4 border-t border-white/[0.08]">
+          <div className="px-5 py-4 border-t border-black/[0.08]">
             <Button onClick={() => useThisPhoto(selected)}>
               Usar esta foto
             </Button>
@@ -222,7 +222,7 @@ export function CreateTwinCameraScreen({ onNav, setUserPhoto }: Props) {
           Coloca tu rostro dentro de la guía y captura.
         </p>
 
-        <div className="relative aspect-square w-full rounded-3xl overflow-hidden bg-card2 border border-white/[0.08]">
+        <div className="relative aspect-square w-full rounded-3xl overflow-hidden bg-[#0B0F17] border border-black/[0.08]">
           {/* Live camera */}
           <video
             ref={videoRef}
@@ -255,8 +255,8 @@ export function CreateTwinCameraScreen({ onNav, setUserPhoto }: Props) {
                 <AlertTriangle size={26} />
               </div>
               <div>
-                <p className="text-txt text-[14px] font-extrabold">Cámara no disponible</p>
-                <p className="text-sub text-[12px] mt-1">Permite el acceso o carga una imagen.</p>
+                <p className="text-white text-[14px] font-extrabold">Cámara no disponible</p>
+                <p className="text-white/70 text-[12px] mt-1">Permite el acceso o carga una imagen.</p>
               </div>
             </div>
           )}
@@ -265,9 +265,9 @@ export function CreateTwinCameraScreen({ onNav, setUserPhoto }: Props) {
           {camState === "live" && (
             <>
               <svg className="absolute inset-0 w-full h-full" viewBox="0 0 200 200" preserveAspectRatio="none">
-                <ellipse cx="100" cy="100" rx="55" ry="72" fill="none" stroke="#60A5FA" strokeWidth="0.8" strokeDasharray="3 2" />
+                <ellipse cx="100" cy="100" rx="55" ry="72" fill="none" stroke="#2563EB" strokeWidth="0.8" strokeDasharray="3 2" />
               </svg>
-              <span className="absolute top-3 left-3 px-2 py-1 rounded-full bg-black/60 text-[10px] text-txt font-bold flex items-center gap-1">
+              <span className="absolute top-3 left-3 px-2 py-1 rounded-full bg-black/60 text-[10px] text-white font-bold flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-brand-red animate-pulse" />
                 EN VIVO
               </span>
@@ -331,7 +331,7 @@ export function CreateTwinCameraScreen({ onNav, setUserPhoto }: Props) {
       <div className="space-y-3">
         <OptionCard
           icon={<Camera size={20} />}
-          color="#60A5FA"
+          color="#2563EB"
           title="Tomar una foto"
           body="Usa la cámara frontal para inspirar tu gemelo."
           onClick={enableCamera}
@@ -339,14 +339,14 @@ export function CreateTwinCameraScreen({ onNav, setUserPhoto }: Props) {
         />
         <OptionCard
           icon={<ImagePlus size={20} />}
-          color="#2DD4BF"
+          color="#0D9488"
           title="Cargar una imagen"
           body="Sube una foto desde tu galería."
           onClick={() => setMode("gallery")}
         />
         <OptionCard
           icon={<UserPlus size={20} />}
-          color="#A78BFA"
+          color="#7C3AED"
           title="Crear sin foto"
           body="Diseña tu gemelo desde cero con el editor."
           onClick={() => {
@@ -356,7 +356,7 @@ export function CreateTwinCameraScreen({ onNav, setUserPhoto }: Props) {
         />
       </div>
 
-      <div className="mt-auto rounded-[20px] bg-card2 border border-white/[0.08] p-3 flex items-start gap-2.5">
+      <div className="mt-auto rounded-[20px] bg-card2 border border-black/[0.08] p-3 flex items-start gap-2.5">
         <div className="w-6 h-6 rounded-lg bg-brand-blue/15 text-brand-blue flex items-center justify-center shrink-0 mt-0.5">
           <Camera size={12} />
         </div>
@@ -382,7 +382,7 @@ function OptionCard({
   return (
     <button
       onClick={onClick}
-      className="w-full bg-card border border-white/[0.08] rounded-[20px] p-4 flex items-start gap-3 active:scale-[0.99] transition text-left"
+      className="w-full bg-card border border-black/[0.08] rounded-[20px] p-4 flex items-start gap-3 active:scale-[0.99] transition text-left"
       style={{ borderLeft: `3px solid ${color}` }}
     >
       <div

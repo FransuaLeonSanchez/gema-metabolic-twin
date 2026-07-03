@@ -36,16 +36,16 @@ export function Projection5yScreen({ onNav }: Props) {
         <DualLine
           labels={["Hoy", "+1a", "+2a", "+3a", "+5a"]}
           series={[
-            { data: projection5y.noChange, color: "#FB7185", label: "Sin cambios" },
-            { data: projection5y.plan,     color: "#2DD4BF", label: "Con plan" },
+            { data: projection5y.noChange, color: "#E11D48", label: "Sin cambios" },
+            { data: projection5y.plan,     color: "#0D9488", label: "Con plan" },
           ]}
         />
       </Card>
 
       <div className="mt-3 space-y-3">
-        <Card accent="#FB7185">
+        <Card accent="#E11D48">
           <p className="text-brand-red text-[12px] font-extrabold uppercase tracking-wider inline-flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-brand-red shadow-[0_0_8px_#FB7185]" />
+            <span className="w-2 h-2 rounded-full bg-brand-red shadow-[0_0_8px_#E11D48]" />
             Camino actual
           </p>
           <p className="text-txt text-[14px] font-extrabold mt-1">
@@ -57,9 +57,9 @@ export function Projection5yScreen({ onNav }: Props) {
           </p>
         </Card>
 
-        <Card accent="#2DD4BF">
+        <Card accent="#0D9488">
           <p className="text-brand-teal text-[12px] font-extrabold uppercase tracking-wider inline-flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-brand-teal shadow-[0_0_8px_#2DD4BF]" />
+            <span className="w-2 h-2 rounded-full bg-brand-teal shadow-[0_0_8px_#0D9488]" />
             Con tu plan
           </p>
           <p className="text-txt text-[14px] font-extrabold mt-1">
@@ -72,10 +72,10 @@ export function Projection5yScreen({ onNav }: Props) {
       </div>
 
       <div
-        className="mt-5 rounded-[20px] border border-white/[0.08] p-4 text-center shadow-card"
+        className="mt-5 rounded-[20px] border border-black/[0.08] p-4 text-center shadow-card"
         style={{
           background:
-            "radial-gradient(120% 140% at 50% 0%, rgba(96,165,250,0.12) 0%, transparent 60%), linear-gradient(180deg, #141C30, #111726)",
+            "radial-gradient(120% 140% at 50% 0%, rgba(37,99,235,0.12) 0%, transparent 60%), linear-gradient(180deg, #EEF3FB 0%, #FFFFFF 100%)",
         }}
       >
         <p className="text-txt text-[14px] font-extrabold leading-snug">
@@ -83,7 +83,7 @@ export function Projection5yScreen({ onNav }: Props) {
         </p>
         <p
           className="text-[14px] font-extrabold bg-clip-text text-transparent inline-block"
-          style={{ backgroundImage: "linear-gradient(120deg, #60A5FA, #A78BFA)" }}
+          style={{ backgroundImage: "linear-gradient(120deg, #2563EB, #7C3AED)" }}
         >
           Tú eliges cuál vivir.
         </p>

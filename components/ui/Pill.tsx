@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 
 export function Pill({
   children,
-  color = "#60A5FA",
+  color = "#2563EB",
   className = "",
 }: {
   children: ReactNode;

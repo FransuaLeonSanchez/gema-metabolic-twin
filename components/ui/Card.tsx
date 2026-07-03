@@ -17,7 +17,7 @@ export function Card({ children, className = "", onClick, accent, inner }: Props
   return (
     <div
       onClick={onClick}
-      className={`relative ${base} border border-white/[0.06] rounded-[20px] p-4 shadow-card ${interactive} ${className}`}
+      className={`relative ${base} border border-black/[0.07] rounded-[20px] p-4 shadow-card ${interactive} ${className}`}
     >
       {accent && (
         <span

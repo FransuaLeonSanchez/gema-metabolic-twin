@@ -33,50 +33,50 @@ function HeroFallback() {
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(120% 90% at 50% 30%, #1B2845 0%, #0E1424 70%), linear-gradient(180deg, #0E1422, #090D17)",
+            "radial-gradient(120% 90% at 50% 30%, #E8EEFB 0%, #DCE6F5 70%), linear-gradient(180deg, #FFFFFF, #EEF2F8)",
         }}
       />
       <svg viewBox="0 0 400 240" className="absolute inset-0 w-full h-full">
         <defs>
           <radialGradient id="halo" cx="50%" cy="45%" r="55%">
-            <stop offset="0%" stopColor="#60A5FA" stopOpacity="0.45" />
-            <stop offset="100%" stopColor="#60A5FA" stopOpacity="0" />
+            <stop offset="0%" stopColor="#2563EB" stopOpacity="0.45" />
+            <stop offset="100%" stopColor="#2563EB" stopOpacity="0" />
           </radialGradient>
         </defs>
         <circle cx="200" cy="115" r="110" fill="url(#halo)" />
         {/* Phone */}
         <g transform="translate(168 50)">
-          <rect width="64" height="130" rx="14" fill="#090D17" stroke="#60A5FA" strokeOpacity="0.8" strokeWidth="1.5" />
-          <rect x="6" y="14" width="52" height="100" rx="8" fill="#0F1525" />
-          <circle cx="32" cy="6" r="2.5" fill="#222C42" />
+          <rect width="64" height="130" rx="14" fill="#FFFFFF" stroke="#2563EB" strokeOpacity="0.8" strokeWidth="1.5" />
+          <rect x="6" y="14" width="52" height="100" rx="8" fill="#EEF3FB" />
+          <circle cx="32" cy="6" r="2.5" fill="#94A0B8" />
           <polyline
             points="10,80 18,80 22,62 30,98 36,72 44,86 54,86"
             fill="none"
-            stroke="#60A5FA"
+            stroke="#2563EB"
             strokeWidth="2.2"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
-          <text x="32" y="42" fontSize="10" fontWeight="800" textAnchor="middle" fill="#2DD4BF">
+          <text x="32" y="42" fontSize="10" fontWeight="800" textAnchor="middle" fill="#0D9488">
             ICM 59
           </text>
         </g>
         {/* Telemetry dots */}
-        <g fill="#2DD4BF">
+        <g fill="#0D9488">
           <circle cx="120" cy="40" r="3" />
           <circle cx="290" cy="200" r="3" />
         </g>
-        <g fill="#60A5FA">
+        <g fill="#2563EB">
           <circle cx="80" cy="170" r="3" />
           <circle cx="320" cy="60" r="3" />
         </g>
       </svg>
       {/* Floating icon chips */}
-      <Chip className="left-3 top-3" color="#FB7185" Icon={Heart} />
-      <Chip className="right-3 top-6" color="#60A5FA" Icon={Droplet} />
-      <Chip className="left-4 bottom-6" color="#A78BFA" Icon={Moon} />
-      <Chip className="right-4 bottom-3" color="#4ADE80" Icon={Activity} />
-      <Chip className="left-1/2 -translate-x-1/2 top-2" color="#2DD4BF" Icon={Leaf} />
+      <Chip className="left-3 top-3" color="#E11D48" Icon={Heart} />
+      <Chip className="right-3 top-6" color="#2563EB" Icon={Droplet} />
+      <Chip className="left-4 bottom-6" color="#7C3AED" Icon={Moon} />
+      <Chip className="right-4 bottom-3" color="#16A34A" Icon={Activity} />
+      <Chip className="left-1/2 -translate-x-1/2 top-2" color="#0D9488" Icon={Leaf} />
     </div>
   );
 }
@@ -113,7 +113,7 @@ export function LoginScreen({ onNav }: Props) {
       <div className="text-center pt-3 pb-1">
         <h2
           className="inline-block text-[32px] font-extrabold tracking-[0.24em] uppercase leading-none bg-clip-text text-transparent"
-          style={{ backgroundImage: "linear-gradient(120deg, #60A5FA 10%, #A78BFA 90%)" }}
+          style={{ backgroundImage: "linear-gradient(120deg, #2563EB 10%, #7C3AED 90%)" }}
         >
           GEMA
         </h2>
@@ -123,7 +123,7 @@ export function LoginScreen({ onNav }: Props) {
       </div>
 
       {/* Hero */}
-      <div className="relative w-full aspect-[16/11] rounded-3xl overflow-hidden border border-white/[0.08] bg-card2 mt-6 shadow-card">
+      <div className="relative w-full aspect-[16/11] rounded-3xl overflow-hidden border border-black/[0.08] bg-card2 mt-6 shadow-card">
         {imgOk ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -136,8 +136,8 @@ export function LoginScreen({ onNav }: Props) {
         ) : (
           <HeroFallback />
         )}
-        {/* Bottom gradient + caption for legibility regardless of image */}
-        <div className="absolute inset-0 bg-gradient-to-t from-bg/95 via-bg/15 to-transparent" />
+        {/* Bottom scrim + caption for legibility regardless of image */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
         <div className="absolute bottom-3.5 left-4 right-4">
           <p className="text-brand-blue text-[9.5px] uppercase tracking-[0.24em] font-extrabold">
             Prevención metabólica
@@ -161,7 +161,7 @@ export function LoginScreen({ onNav }: Props) {
 
       {phase === "email-form" ? (
         <div className="space-y-3">
-          <div className="bg-card border border-white/[0.08] rounded-full px-5 h-12 flex items-center gap-2.5 focus-within:border-brand-blue/50 transition-colors">
+          <div className="bg-card border border-black/[0.08] rounded-full px-5 h-12 flex items-center gap-2.5 focus-within:border-brand-blue/50 transition-colors">
             <Mail size={16} className="text-sub" />
             <input
               autoFocus
@@ -182,7 +182,7 @@ export function LoginScreen({ onNav }: Props) {
           <button
             onClick={googleSignIn}
             disabled={phase === "google"}
-            className="w-full h-12 rounded-full bg-white text-[#1F1F1F] text-[14px] font-bold flex items-center justify-center gap-3 active:scale-[0.97] transition disabled:opacity-80 shadow-[0_10px_24px_-10px_rgba(255,255,255,0.25)]"
+            className="w-full h-12 rounded-full bg-white border border-black/[0.10] text-[#1F1F1F] text-[14px] font-bold flex items-center justify-center gap-3 active:scale-[0.97] transition disabled:opacity-80 shadow-[0_8px_20px_-10px_rgba(15,27,45,0.35)]"
           >
             {phase === "google" ? (
               <>

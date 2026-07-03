@@ -25,7 +25,7 @@ export function Button({
       ? "text-white font-bold border border-white/10 bg-brand-gradient shadow-[0_10px_24px_-8px_rgba(99,124,246,0.55)]"
       : variant === "danger"
       ? "bg-brand-red/10 border border-brand-red/25 text-brand-red font-bold"
-      : "bg-white/[0.04] border border-white/[0.08] text-txt font-bold";
+      : "bg-black/[0.035] border border-black/[0.08] text-txt font-bold";
   return (
     <button
       onClick={onClick}

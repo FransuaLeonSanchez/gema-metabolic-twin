@@ -49,20 +49,20 @@ export function TwinScreen({ onNav, appearance, useImage = false, icmBase = icmT
     delta < 0
       ? {
           icon: <TrendingDown size={16} />,
-          color: "#2DD4BF",
+          color: "#0D9488",
           title: "Mejor escenario",
           text: `Si cumples este plan, tu riesgo bajaría ${Math.abs(delta)} puntos hoy.`,
         }
       : delta > 0
       ? {
           icon: <TrendingUp size={16} />,
-          color: "#FB7185",
+          color: "#E11D48",
           title: "Peor escenario",
           text: `Cuidado: este escenario subiría tu riesgo ${delta} puntos.`,
         }
       : {
           icon: <Minus size={16} />,
-          color: "#FBBF24",
+          color: "#D97706",
           title: "Sin cambios",
           text: "Este escenario mantiene tu riesgo igual.",
         };
@@ -77,8 +77,8 @@ export function TwinScreen({ onNav, appearance, useImage = false, icmBase = icmT
       <div
         className="flex flex-col items-center justify-center rounded-[28px] py-6 mb-4 shadow-card"
         style={{
-          background: `radial-gradient(120% 90% at 50% 0%, ${ts.color}26, transparent 65%), linear-gradient(180deg, #141C30, #0E1422)`,
-          border: "1px solid rgba(255,255,255,0.07)",
+          background: `radial-gradient(120% 90% at 50% 0%, ${ts.color}26, transparent 65%), linear-gradient(180deg, #EEF3FB 0%, #FFFFFF 100%)`,
+          border: "1px solid rgba(15,27,45,0.06)",
           transition: "background 500ms",
         }}
       >
@@ -111,7 +111,7 @@ export function TwinScreen({ onNav, appearance, useImage = false, icmBase = icmT
 
         <div className="space-y-5">
           <SliderRow
-            color="#4ADE80"
+            color="#16A34A"
             contribution={breakdown.walk}
             sourceNote="Caminar tras comer baja el pico postprandial hasta 20 % (Reynolds 2016)."
           >
@@ -121,13 +121,13 @@ export function TwinScreen({ onNav, appearance, useImage = false, icmBase = icmT
               min={0}
               max={60}
               unit=" min"
-              color="#4ADE80"
+              color="#16A34A"
               onChange={setWalk}
             />
           </SliderRow>
 
           <SliderRow
-            color="#A78BFA"
+            color="#7C3AED"
             contribution={breakdown.sleep}
             sourceNote="Dormir < 7 h eleva la resistencia a la insulina ~30 % al día siguiente (Spiegel 1999)."
           >
@@ -138,13 +138,13 @@ export function TwinScreen({ onNav, appearance, useImage = false, icmBase = icmT
               max={9}
               step={0.5}
               unit=" h"
-              color="#A78BFA"
+              color="#7C3AED"
               onChange={setSleep}
             />
           </SliderRow>
 
           <SliderRow
-            color="#2DD4BF"
+            color="#0D9488"
             contribution={breakdown.carbs}
             sourceNote="A más carbohidratos en la cena, mayor glucosa en ayunas (Hall 2019)."
           >
@@ -154,7 +154,7 @@ export function TwinScreen({ onNav, appearance, useImage = false, icmBase = icmT
               min={20}
               max={80}
               unit=" %"
-              color="#2DD4BF"
+              color="#0D9488"
               onChange={setCarbs}
             />
           </SliderRow>
@@ -198,7 +198,7 @@ export function TwinScreen({ onNav, appearance, useImage = false, icmBase = icmT
       {/* ICM info accordion */}
       <button
         onClick={() => setOpenInfo((o) => !o)}
-        className="mt-4 w-full bg-card border border-white/[0.08] rounded-[20px] px-4 py-3 flex items-center justify-between active:scale-[0.99] transition"
+        className="mt-4 w-full bg-card border border-black/[0.08] rounded-[20px] px-4 py-3 flex items-center justify-between active:scale-[0.99] transition"
       >
         <span className="flex items-center gap-2 text-txt text-[13px] font-extrabold">
           <Info size={15} className="text-brand-blue" />
@@ -211,7 +211,7 @@ export function TwinScreen({ onNav, appearance, useImage = false, icmBase = icmT
       </button>
 
       {openInfo && (
-        <div className="mt-2 rounded-[20px] border border-white/[0.08] bg-card2 p-4 text-[12.5px] text-sub leading-relaxed">
+        <div className="mt-2 rounded-[20px] border border-black/[0.08] bg-card2 p-4 text-[12.5px] text-sub leading-relaxed">
           <p>
             El <span className="text-txt font-extrabold">Índice de Carga
             Metabólica (ICM)</span> es un score{" "}
@@ -231,7 +231,7 @@ export function TwinScreen({ onNav, appearance, useImage = false, icmBase = icmT
             {subIndices.map((s) => (
               <li
                 key={s.key}
-                className="flex items-center justify-between bg-card border border-white/[0.08] rounded-xl px-3 py-1.5"
+                className="flex items-center justify-between bg-card border border-black/[0.08] rounded-xl px-3 py-1.5"
               >
                 <span className="text-txt text-[12px] font-bold">{s.key}</span>
                 <span className="font-extrabold text-[12px]" style={{ color: s.color }}>
@@ -243,9 +243,9 @@ export function TwinScreen({ onNav, appearance, useImage = false, icmBase = icmT
 
           <p className="mt-3 text-txt font-extrabold text-[12px]">Umbrales</p>
           <div className="flex gap-2 mt-1">
-            <Pill color="#2DD4BF">0–39 saludable</Pill>
-            <Pill color="#FBBF24">40–69 moderado</Pill>
-            <Pill color="#FB7185">70+ alto</Pill>
+            <Pill color="#0D9488">0–39 saludable</Pill>
+            <Pill color="#D97706">40–69 moderado</Pill>
+            <Pill color="#E11D48">70+ alto</Pill>
           </div>
           <p className="text-hint text-[11px] mt-3 leading-snug">
             En esta demo el ICM se calcula localmente. En el producto real, el
@@ -271,7 +271,7 @@ function SliderRow({
 }) {
   const isBetter = contribution < -0.05;
   const isWorse = contribution > 0.05;
-  const chipColor = isBetter ? "#2DD4BF" : isWorse ? "#FB7185" : "#94A0B8";
+  const chipColor = isBetter ? "#0D9488" : isWorse ? "#E11D48" : "#5B6B85";
 
   return (
     <div>

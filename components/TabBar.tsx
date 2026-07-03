@@ -21,7 +21,7 @@ export function TabBar({ active, onNav }: Props) {
 
   return (
     <div className="absolute bottom-0 left-0 right-0 z-30 px-3 pb-3 pt-9 pointer-events-none bg-gradient-to-t from-bg via-bg/80 to-transparent">
-      <div className="relative pointer-events-auto h-[64px] rounded-[26px] bg-bg2/90 backdrop-blur-xl border border-white/[0.07] shadow-soft">
+      <div className="relative pointer-events-auto h-[64px] rounded-[26px] bg-bg2/90 backdrop-blur-xl border border-black/[0.07] shadow-soft">
         <div className="absolute inset-0 grid grid-cols-5 items-center px-1">
           {left.map((it) => (
             <TabItem key={it.id} it={it} active={active === it.id} onNav={onNav} />
@@ -39,7 +39,7 @@ export function TabBar({ active, onNav }: Props) {
           style={{
             background: "linear-gradient(135deg, #3D7BF6 0%, #7C5CF6 100%)",
             boxShadow:
-              "0 12px 26px -6px rgba(99,124,246,0.55), 0 0 0 5px #090D17, inset 0 1px 0 rgba(255,255,255,0.25)",
+              "0 12px 26px -6px rgba(99,124,246,0.55), 0 0 0 5px #FFFFFF, inset 0 1px 0 rgba(255,255,255,0.25)",
           }}
           aria-label="Registrar comida"
         >

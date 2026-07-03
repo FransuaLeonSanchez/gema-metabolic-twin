@@ -7,7 +7,7 @@ interface Props {
 }
 
 const colorFor = (v: number) =>
-  v < 40 ? "#2DD4BF" : v < 70 ? "#FBBF24" : "#FB7185";
+  v < 40 ? "#0D9488" : v < 70 ? "#D97706" : "#E11D48";
 
 export function BarsWeek({ data, height = 130, highlightIdx }: Props) {
   const max = Math.max(...data.map((d) => d.icm), 100);
@@ -33,7 +33,7 @@ export function BarsWeek({ data, height = 130, highlightIdx }: Props) {
                 style={{
                   height: `${h}px`,
                   backgroundColor: active ? c : `${c}55`,
-                  border: active ? `1px solid ${c}` : "1px solid #222C42",
+                  border: active ? `1px solid ${c}` : "1px solid #E3E8F1",
                   animation: "grow 700ms ease-out both",
                   animationDelay: `${i * 60}ms`,
                 }}

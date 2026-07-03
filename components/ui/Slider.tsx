@@ -17,7 +17,7 @@ export function Slider({
   min,
   max,
   step = 1,
-  color = "#60A5FA",
+  color = "#2563EB",
   unit = "",
   onChange,
 }: Props) {
@@ -44,7 +44,7 @@ export function Slider({
         onChange={(e) => onChange(parseFloat(e.target.value))}
         style={{
           ["--thumb" as any]: color,
-          background: `linear-gradient(90deg, ${color} ${pct}%, #222C42 ${pct}%)`,
+          background: `linear-gradient(90deg, ${color} ${pct}%, #E3E8F1 ${pct}%)`,
         }}
       />
     </div>

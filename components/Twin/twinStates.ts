@@ -8,9 +8,9 @@ export interface TwinPalette {
 }
 
 export const palettes: Record<Mood, TwinPalette> = {
-  happy:   { color: "#2DD4BF", glow: "#2DD4BF", cheek: "#FF9AB3", label: "Saludable" },
-  neutral: { color: "#FBBF24", glow: "#FBBF24", cheek: "#FFB7A0", label: "Regular" },
-  tired:   { color: "#FB7185", glow: "#FB7185", cheek: "#B97581", label: "En riesgo" },
+  happy:   { color: "#0D9488", glow: "#0D9488", cheek: "#FF9AB3", label: "Saludable" },
+  neutral: { color: "#D97706", glow: "#D97706", cheek: "#FFB7A0", label: "Regular" },
+  tired:   { color: "#E11D48", glow: "#E11D48", cheek: "#B97581", label: "En riesgo" },
 };
 
 export function getTwinState(icm: number): { mood: Mood; palette: TwinPalette } {

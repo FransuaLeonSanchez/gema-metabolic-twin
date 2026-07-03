@@ -18,9 +18,9 @@ const STEPS = [
 ];
 
 const STATE_META = {
-  happy:   { label: "Saludable",  color: "#2DD4BF" },
-  neutral: { label: "Regular",    color: "#FBBF24" },
-  tired:   { label: "En riesgo",  color: "#FB7185" },
+  happy:   { label: "Saludable",  color: "#0D9488" },
+  neutral: { label: "Regular",    color: "#D97706" },
+  tired:   { label: "En riesgo",  color: "#E11D48" },
 };
 
 export function TwinGenerationScreen({ onNav, onComplete }: Props) {
@@ -87,12 +87,12 @@ export function TwinGenerationScreen({ onNav, onComplete }: Props) {
                   className="w-6 h-6 rounded-full flex items-center justify-center shrink-0"
                   style={{
                     backgroundColor: isDone
-                      ? "#2DD4BF22"
+                      ? "#0D948822"
                       : isActive
-                      ? "#60A5FA22"
-                      : "#222C42",
+                      ? "#2563EB22"
+                      : "#E3E8F1",
                     border: `1px solid ${
-                      isDone ? "#2DD4BF" : isActive ? "#60A5FA" : "#222C42"
+                      isDone ? "#0D9488" : isActive ? "#2563EB" : "#E3E8F1"
                     }`,
                   }}
                 >
@@ -121,7 +121,7 @@ export function TwinGenerationScreen({ onNav, onComplete }: Props) {
                   <div
                     className="w-[82px] h-[82px] rounded-[20px] overflow-hidden border-2 transition-all"
                     style={{
-                      borderColor: ready ? m.color : "#222C42",
+                      borderColor: ready ? m.color : "#E3E8F1",
                       opacity: ready ? 1 : 0.25,
                       boxShadow: ready ? `0 4px 16px ${m.color}44` : "none",
                       transition: "all 0.5s ease",
@@ -140,7 +140,7 @@ export function TwinGenerationScreen({ onNav, onComplete }: Props) {
                   </div>
                   <span
                     className="text-[10px] font-extrabold"
-                    style={{ color: ready ? m.color : "#5D6883" }}
+                    style={{ color: ready ? m.color : "#93A0B5" }}
                   >
                     {m.label}
                   </span>
