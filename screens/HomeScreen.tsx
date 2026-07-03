@@ -22,7 +22,7 @@ import { ScoreRing } from "@/components/charts/ScoreRing";
 import { Sparkline } from "@/components/charts/Sparkline";
 import { TwinAvatar } from "@/components/Twin/TwinAvatar";
 import { glucoseDay, mockUser, recommendations } from "@/lib/mockData";
-import { liveSubIndices, twinState } from "@/lib/icm";
+import { liveSubIndices, subIndexRisk, twinState } from "@/lib/icm";
 import type { Meal, MealType, ScreenId, SubIndexKey, TwinAppearance } from "@/lib/types";
 
 interface Props {
@@ -166,12 +166,13 @@ export function HomeScreen({
       <div className="grid grid-cols-2 gap-3">
         {subIndices.map((s) => {
           const Icon = ICONS[s.key] ?? Sparkles;
+          const risk = subIndexRisk(s.value);
           return (
             <Card key={s.key} onClick={() => onOpenSubIndex(s.key as SubIndexKey)}>
               <div className="flex items-start gap-2">
                 <div
                   className="w-8 h-8 rounded-lg flex items-center justify-center"
-                  style={{ backgroundColor: `${s.color}22`, color: s.color }}
+                  style={{ backgroundColor: `${risk.color}1f`, color: risk.color }}
                 >
                   <Icon size={16} />
                 </div>
@@ -181,10 +182,15 @@ export function HomeScreen({
                 </div>
               </div>
               <div className="mt-3">
-                <ProgressBar value={s.value} color={s.color} />
-                <p className="text-[11px] mt-1.5 font-bold" style={{ color: s.color }}>
-                  {s.value}/100
-                </p>
+                <ProgressBar value={s.value} color={risk.color} />
+                <div className="flex items-center justify-between mt-1.5">
+                  <p className="text-[11px] font-bold" style={{ color: risk.color }}>
+                    {risk.label}
+                  </p>
+                  <p className="text-hint text-[10px] font-bold tabular-nums">
+                    {s.value}/100
+                  </p>
+                </div>
               </div>
             </Card>
           );

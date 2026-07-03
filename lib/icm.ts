@@ -122,3 +122,14 @@ export function projectICM(
 export function clamp(v: number, min: number, max: number) {
   return Math.max(min, Math.min(max, v));
 }
+
+/**
+ * Semáforo de riesgo por sub-índice: verde = bien, ámbar = regular,
+ * rojo = necesita atención. Mismos umbrales que el ICM general (0–39 / 40–69 / 70+)
+ * para que la lectura sea consistente en toda la app.
+ */
+export function subIndexRisk(value: number): { color: string; label: string } {
+  if (value < 40) return { color: "#16A34A", label: "Bien" };
+  if (value < 70) return { color: "#D97706", label: "Regular" };
+  return { color: "#E11D48", label: "Atención" };
+}

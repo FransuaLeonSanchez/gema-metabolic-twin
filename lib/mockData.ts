@@ -83,6 +83,36 @@ export const glucoseDay = [
   92, 90, 89, 90, 92, 95, 98, 101, 99, 96, 94, 92, 91,
 ];
 
+// Métrica real (con unidades) que respalda cada sub-índice, para que el
+// score de 0-100 no se sienta abstracto en la pantalla de detalle.
+export const subIndexReal: Record<string, { label: string; value: string; sub: string }> = {
+  Glucosa: {
+    label: "Glucosa ahora",
+    value: `${glucoseDay[glucoseDay.length - 1]} mg/dL`,
+    sub: `Pico hoy: ${Math.max(...glucoseDay)} mg/dL tras el almuerzo`,
+  },
+  Actividad: {
+    label: "Pasos hoy",
+    value: "4,820",
+    sub: "Meta diaria: 7,000 pasos",
+  },
+  Sueño: {
+    label: "Sueño anoche",
+    value: "5h 40min",
+    sub: "Meta: 7h por noche",
+  },
+  Estrés: {
+    label: "Variabilidad cardiaca (HRV)",
+    value: `${mockUser.labs.hrv} ms`,
+    sub: `Frecuencia en reposo: ${mockUser.labs.restingHR} bpm`,
+  },
+  Nutrición: {
+    label: "Triglicéridos",
+    value: `${mockUser.labs.triglycerides} mg/dL`,
+    sub: "Meta: menos de 150 mg/dL",
+  },
+};
+
 export const weekICM = [
   { d: "Lun", icm: 64 },
   { d: "Mar", icm: 61 },
