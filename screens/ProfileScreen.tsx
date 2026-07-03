@@ -19,14 +19,15 @@ import { SectionTitle } from "@/components/ui/SectionTitle";
 import { TwinAvatar } from "@/components/Twin/TwinAvatar";
 import { devices, icmToday, mockUser } from "@/lib/mockData";
 import { twinState } from "@/lib/icm";
-import type { PairedDevice, ScreenId, TwinAppearance } from "@/lib/types";
+import type { PairedDevice, TwinAppearance } from "@/lib/types";
 
 interface Props {
-  onNav: (s: ScreenId) => void;
   appearance: TwinAppearance;
   useImage?: boolean;
   pairedDevice: PairedDevice | null;
   onStartPair: () => void;
+  onOpenDoctor: () => void;
+  onLogout: () => void;
 }
 
 const DEV_ICONS: Record<string, any> = {
@@ -35,7 +36,7 @@ const DEV_ICONS: Record<string, any> = {
   scale: Scale,
 };
 
-export function ProfileScreen({ onNav, appearance, useImage = false, pairedDevice, onStartPair }: Props) {
+export function ProfileScreen({ appearance, useImage = false, pairedDevice, onStartPair, onOpenDoctor, onLogout }: Props) {
   const ts = twinState(icmToday);
 
   // If paired during onboarding, replace the generic smartwatch entry.
@@ -138,7 +139,7 @@ export function ProfileScreen({ onNav, appearance, useImage = false, pairedDevic
       </div>
 
       <SectionTitle>Reporte médico</SectionTitle>
-      <Card onClick={() => onNav("doctor")}>
+      <Card onClick={onOpenDoctor}>
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-brand-blue/15 text-brand-blue flex items-center justify-center">
             <FileText size={18} />
@@ -152,7 +153,7 @@ export function ProfileScreen({ onNav, appearance, useImage = false, pairedDevic
       </Card>
 
       <div className="mt-5">
-        <Button variant="danger" icon={<LogOut size={16} />} onClick={() => onNav("login")}>
+        <Button variant="danger" icon={<LogOut size={16} />} onClick={onLogout}>
           Cerrar sesión
         </Button>
       </div>

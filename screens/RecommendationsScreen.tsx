@@ -1,9 +1,11 @@
 "use client";
 import { useState } from "react";
 import { Check, Leaf, Activity, Moon, Sparkles } from "lucide-react";
+import { TopBar } from "@/components/ui/TopBar";
 import { Card } from "@/components/ui/Card";
 import { Pill } from "@/components/ui/Pill";
 import { recommendations } from "@/lib/mockData";
+import type { ScreenId } from "@/lib/types";
 
 const ICONS: Record<string, any> = {
   Nutrición: Leaf,
@@ -11,13 +13,17 @@ const ICONS: Record<string, any> = {
   Sueño: Moon,
 };
 
-export function RecommendationsScreen() {
+interface Props {
+  onNav: (s: ScreenId) => void;
+}
+
+export function RecommendationsScreen({ onNav }: Props) {
   const [done, setDone] = useState<Record<number, boolean>>({});
 
   return (
-    <div className="h-full overflow-y-auto scroll-hide px-5 pt-3 pb-[100px]">
-      <h1 className="text-txt text-[22px] font-extrabold mb-1">Recomendaciones</h1>
-      <p className="text-sub text-[12px] mb-4">
+    <div className="h-full overflow-y-auto scroll-hide px-5 pt-2 pb-[100px]">
+      <TopBar title="Recomendaciones" onBack={() => onNav("home")} />
+      <p className="text-sub text-[12px] mb-4 -mt-1">
         Acciones personalizadas según tu día. Tu gemelo las eligió para ti.
       </p>
 

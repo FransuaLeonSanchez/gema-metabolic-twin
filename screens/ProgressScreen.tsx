@@ -6,13 +6,13 @@ import { SectionTitle } from "@/components/ui/SectionTitle";
 import { BarsWeek } from "@/components/charts/BarsWeek";
 import { Button } from "@/components/ui/Button";
 import { projection5y, weekICM, weekMetrics } from "@/lib/mockData";
-import type { ScreenId } from "@/lib/types";
 
 interface Props {
-  onNav: (s: ScreenId) => void;
+  onOpenProjection: () => void;
+  onOpenDoctor: () => void;
 }
 
-export function ProgressScreen({ onNav }: Props) {
+export function ProgressScreen({ onOpenProjection, onOpenDoctor }: Props) {
   return (
     <div className="h-full overflow-y-auto scroll-hide px-5 pt-3 pb-[100px]">
       <h1 className="text-txt text-[22px] font-extrabold mb-3">Progreso</h1>
@@ -46,7 +46,7 @@ export function ProgressScreen({ onNav }: Props) {
       </div>
 
       <SectionTitle>Riesgo a 5 años</SectionTitle>
-      <Card accent="#D97706" onClick={() => onNav("projection")}>
+      <Card accent="#D97706" onClick={onOpenProjection}>
         <div className="flex items-start gap-3">
           <div className="flex-1">
             <p className="text-brand-amber text-[40px] font-extrabold leading-none">
@@ -64,12 +64,12 @@ export function ProgressScreen({ onNav }: Props) {
           <ChevronRight size={18} className="text-sub mt-1" />
         </div>
         <div className="mt-3">
-          <Button onClick={() => onNav("projection")}>Ver proyección detallada</Button>
+          <Button onClick={onOpenProjection}>Ver proyección detallada</Button>
         </div>
       </Card>
 
       <SectionTitle>Reporte para tu médico</SectionTitle>
-      <Card onClick={() => onNav("doctor")}>
+      <Card onClick={onOpenDoctor}>
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-brand-blue/15 text-brand-blue flex items-center justify-center font-extrabold">
             PDF

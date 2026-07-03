@@ -1,10 +1,9 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PhoneFrame } from "@/components/PhoneFrame";
 import { TabBar } from "@/components/TabBar";
 import { LoginScreen } from "@/screens/LoginScreen";
 import { WelcomeScreen } from "@/screens/WelcomeScreen";
-import { SplashScreen } from "@/screens/SplashScreen";
 import { CreateTwinCameraScreen } from "@/screens/CreateTwinCameraScreen";
 import { CustomizeTwinScreen } from "@/screens/CustomizeTwinScreen";
 import { PairDeviceScreen } from "@/screens/PairDeviceScreen";
@@ -33,7 +32,6 @@ import type {
 const ONBOARDING: ScreenId[] = [
   "login",
   "welcome",
-  "splash",
   "createTwin",
   "twinGenerating",
   "customize",
@@ -42,26 +40,55 @@ const ONBOARDING: ScreenId[] = [
   "processing",
 ];
 
+const DEFAULT_APPEARANCE: TwinAppearance = {
+  skinTone: 1,
+  hair: "corto",
+  glasses: false,
+  presentation: "masculina",
+};
+
 export default function Page() {
   const [screen, setScreen] = useState<ScreenId>("login");
   const [subIndex, setSubIndex] = useState<SubIndexKey>("Sueño");
   const [userPhoto, setUserPhoto] = useState<string | null>(null);
   const [pairedDevice, setPairedDevice] = useState<PairedDevice | null>(null);
   const [pairReturnTo, setPairReturnTo] = useState<ScreenId>("processing");
-  const [appearance, setAppearance] = useState<TwinAppearance>({
-    skinTone: 1,
-    hair: "corto",
-    glasses: false,
-    presentation: "masculina",
-  });
+  const [doctorReturnTo, setDoctorReturnTo] = useState<ScreenId>("profile");
+  const [projectionReturnTo, setProjectionReturnTo] = useState<ScreenId>("progress");
+  const [appearance, setAppearance] = useState<TwinAppearance>(DEFAULT_APPEARANCE);
   const [meals, setMeals] = useState<Meal[]>([]);
   const [useImage, setUseImage] = useState(false);
+  const [alertsRead, setAlertsRead] = useState(false);
 
   const isOnboarding = ONBOARDING.includes(screen);
+
+  useEffect(() => {
+    if (screen === "alerts") setAlertsRead(true);
+  }, [screen]);
 
   const startPairFrom = (returnTo: ScreenId) => {
     setPairReturnTo(returnTo);
     setScreen("pairDevice");
+  };
+
+  const openDoctorFrom = (returnTo: ScreenId) => {
+    setDoctorReturnTo(returnTo);
+    setScreen("doctor");
+  };
+
+  const openProjectionFrom = (returnTo: ScreenId) => {
+    setProjectionReturnTo(returnTo);
+    setScreen("projection");
+  };
+
+  const logout = () => {
+    setScreen("login");
+    setMeals([]);
+    setPairedDevice(null);
+    setUserPhoto(null);
+    setUseImage(false);
+    setAppearance(DEFAULT_APPEARANCE);
+    setAlertsRead(false);
   };
 
   return (
@@ -72,9 +99,6 @@ export default function Page() {
         )}
         {screen === "welcome" && (
           <WelcomeScreen onNav={setScreen} appearance={appearance} useImage={useImage} />
-        )}
-        {screen === "splash" && (
-          <SplashScreen onNav={setScreen} appearance={appearance} />
         )}
         {screen === "createTwin" && (
           <CreateTwinCameraScreen onNav={setScreen} setUserPhoto={setUserPhoto} />
@@ -87,13 +111,10 @@ export default function Page() {
         )}
         {screen === "customize" && (
           <CustomizeTwinScreen
-            onNav={(s) => {
-              if (s === "processing") {
-                setPairReturnTo("processing");
-                setScreen("profileForm");
-              } else {
-                setScreen(s);
-              }
+            onNav={setScreen}
+            onContinue={() => {
+              setPairReturnTo("processing");
+              setScreen("profileForm");
             }}
             appearance={appearance}
             setAppearance={setAppearance}
@@ -119,6 +140,7 @@ export default function Page() {
             useImage={useImage}
             icm={liveICM(meals)}
             meals={meals}
+            alertsUnread={!alertsRead}
             onOpenSubIndex={(k) => {
               setSubIndex(k);
               setScreen("subIndex");
@@ -127,30 +149,40 @@ export default function Page() {
         )}
         {screen === "twin" && (
           <TwinScreen
-            onNav={setScreen}
             appearance={appearance}
             useImage={useImage}
             icmBase={liveICM(meals)}
+            onOpenProjection={() => openProjectionFrom("twin")}
           />
         )}
         {screen === "log" && (
           <LogInputScreen onNav={setScreen} meals={meals} setMeals={setMeals} />
         )}
-        {screen === "progress" && <ProgressScreen onNav={setScreen} />}
-        {screen === "projection" && <Projection5yScreen onNav={setScreen} />}
-        {screen === "recommendations" && <RecommendationsScreen />}
+        {screen === "progress" && (
+          <ProgressScreen
+            onOpenProjection={() => openProjectionFrom("progress")}
+            onOpenDoctor={() => openDoctorFrom("progress")}
+          />
+        )}
+        {screen === "projection" && (
+          <Projection5yScreen onBack={() => setScreen(projectionReturnTo)} />
+        )}
+        {screen === "recommendations" && <RecommendationsScreen onNav={setScreen} />}
         {screen === "alerts" && <AlertsScreen onNav={setScreen} />}
         {screen === "subIndex" && (
           <SubIndexDetailScreen onNav={setScreen} subIndexKey={subIndex} />
         )}
-        {screen === "doctor" && <DoctorReportScreen onNav={setScreen} />}
+        {screen === "doctor" && (
+          <DoctorReportScreen onBack={() => setScreen(doctorReturnTo)} />
+        )}
         {screen === "profile" && (
           <ProfileScreen
-            onNav={setScreen}
             appearance={appearance}
             useImage={useImage}
             pairedDevice={pairedDevice}
             onStartPair={() => startPairFrom("profile")}
+            onOpenDoctor={() => openDoctorFrom("profile")}
+            onLogout={logout}
           />
         )}
       </div>

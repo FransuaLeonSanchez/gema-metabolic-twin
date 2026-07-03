@@ -155,7 +155,7 @@ export function TwinGenerationScreen({ onNav, onComplete }: Props) {
         <Button
           onClick={() => {
             onComplete();
-            onNav("profileForm");
+            onNav("customize");
           }}
           icon={<Sparkles size={16} />}
         >

@@ -3,7 +3,6 @@ export type Mood = "happy" | "neutral" | "tired";
 export type ScreenId =
   | "login"
   | "welcome"
-  | "splash"
   | "createTwin"
   | "customize"
   | "twinGenerating"

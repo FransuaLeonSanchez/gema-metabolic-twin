@@ -6,6 +6,7 @@ import type { ScreenId, TwinAppearance } from "@/lib/types";
 
 interface Props {
   onNav: (s: ScreenId) => void;
+  onContinue: () => void;
   appearance: TwinAppearance;
   setAppearance: (a: TwinAppearance) => void;
   userPhoto?: string | null;
@@ -14,7 +15,7 @@ interface Props {
 
 const SKIN_SWATCHES = ["#F4D5B8", "#E8B98A", "#D29A6C", "#B07A4F", "#8B5A36"];
 
-export function CustomizeTwinScreen({ onNav, appearance, setAppearance, userPhoto, useImage = false }: Props) {
+export function CustomizeTwinScreen({ onNav, onContinue, appearance, setAppearance, userPhoto, useImage = false }: Props) {
   const set = <K extends keyof TwinAppearance>(k: K, v: TwinAppearance[K]) =>
     setAppearance({ ...appearance, [k]: v });
 
@@ -92,7 +93,7 @@ export function CustomizeTwinScreen({ onNav, appearance, setAppearance, userPhot
       </div>
 
       <div className="pt-3">
-        <Button onClick={() => onNav("processing")}>Continuar</Button>
+        <Button onClick={onContinue}>Continuar</Button>
       </div>
     </div>
   );

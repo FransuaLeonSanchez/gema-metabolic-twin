@@ -16,10 +16,10 @@ import { Button } from "@/components/ui/Button";
 import { TwinAvatar } from "@/components/Twin/TwinAvatar";
 import { projectICMDetailed, twinState } from "@/lib/icm";
 import { icmToday, subIndices } from "@/lib/mockData";
-import type { ScreenId, TwinAppearance } from "@/lib/types";
+import type { TwinAppearance } from "@/lib/types";
 
 interface Props {
-  onNav: (s: ScreenId) => void;
+  onOpenProjection: () => void;
   appearance: TwinAppearance;
   useImage?: boolean;
   icmBase?: number;
@@ -31,7 +31,7 @@ function formatDelta(n: number) {
   return rounded > 0 ? `+${rounded}` : `${rounded}`;
 }
 
-export function TwinScreen({ onNav, appearance, useImage = false, icmBase = icmToday }: Props) {
+export function TwinScreen({ onOpenProjection, appearance, useImage = false, icmBase = icmToday }: Props) {
   const [walk, setWalk] = useState(20);
   const [sleep, setSleep] = useState(6);
   const [carbs, setCarbs] = useState(60);
@@ -188,7 +188,7 @@ export function TwinScreen({ onNav, appearance, useImage = false, icmBase = icmT
       </div>
 
       <div className="mt-4">
-        <Button variant="ghost" onClick={() => onNav("projection")}>
+        <Button variant="ghost" onClick={onOpenProjection}>
           <span className="flex items-center gap-2">
             Ver mi proyección a 5 años <ChevronRight size={16} />
           </span>

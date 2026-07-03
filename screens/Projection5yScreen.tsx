@@ -3,16 +3,15 @@ import { TopBar } from "@/components/ui/TopBar";
 import { Card } from "@/components/ui/Card";
 import { DualLine } from "@/components/charts/DualLine";
 import { projection5y } from "@/lib/mockData";
-import type { ScreenId } from "@/lib/types";
 
 interface Props {
-  onNav: (s: ScreenId) => void;
+  onBack: () => void;
 }
 
-export function Projection5yScreen({ onNav }: Props) {
+export function Projection5yScreen({ onBack }: Props) {
   return (
     <div className="h-full overflow-y-auto scroll-hide px-5 pt-2 pb-[100px]">
-      <TopBar title="Proyección 5 años" onBack={() => onNav("progress")} />
+      <TopBar title="Proyección 5 años" onBack={onBack} />
 
       <p className="text-sub text-[13px] leading-snug mb-3">
         Tu gemelo proyecta cómo evolucionaría tu riesgo de diabetes tipo 2 según el camino

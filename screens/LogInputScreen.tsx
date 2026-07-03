@@ -305,7 +305,7 @@ export function LogInputScreen({ onNav, meals, setMeals }: Props) {
 
         {(stage === "camera" || stage === "analyzing" || stage === "detected") && (
           <>
-            <div className="relative aspect-square w-full rounded-3xl overflow-hidden bg-card2 border border-black/[0.08]">
+            <div className="relative aspect-square w-full rounded-3xl overflow-hidden bg-[#0B0F17] border border-black/[0.08]">
               <video
                 ref={videoRef}
                 playsInline

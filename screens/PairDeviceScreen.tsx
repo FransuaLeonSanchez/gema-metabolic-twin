@@ -120,12 +120,7 @@ export function PairDeviceScreen({ onNav, onPaired, returnTo }: Props) {
           />
         )}
         {step === "success" && (
-          <SuccessStep
-            name={name}
-            color={device.color}
-            onDone={() => onNav(returnTo)}
-            onView={() => onNav("profile")}
-          />
+          <SuccessStep name={name} color={device.color} onDone={() => onNav(returnTo)} />
         )}
 
         <style jsx global>{`
@@ -359,23 +354,16 @@ function SuccessStep({
   name,
   color,
   onDone,
-  onView,
 }: {
   name: string;
   color: string;
   onDone: () => void;
-  onView: () => void;
 }) {
   return (
     <StepFrame
       title={`${name} añadido`}
       subtitle="Tu gemelo ya recibe datos en tiempo real."
-      footer={
-        <>
-          <Button onClick={onDone}>Continuar</Button>
-          <Button variant="ghost" onClick={onView}>Ver mi perfil</Button>
-        </>
-      }
+      footer={<Button onClick={onDone}>Continuar</Button>}
     >
       <div
         className="w-28 h-28 mx-auto rounded-full flex items-center justify-center"
