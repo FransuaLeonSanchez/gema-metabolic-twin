@@ -1,4 +1,4 @@
-import type { AlertItem, Recommendation, SubIndex } from "./types";
+import type { AlertItem, GlucemicLoad, MealType, Recommendation, SubIndex } from "./types";
 
 export const mockUser = {
   name: "Fransua",
@@ -178,6 +178,72 @@ export const detectedMeal = {
   kcal: 540,
   predictedPeak: 158,
   predictedMinutes: 60,
+};
+
+// Platos peruanos con datos nutricionales REALES (investigados y contrastados
+// contra Fitia, FatSecret, NutritionValue, MINSA y tablas de índice glucémico
+// de Harvard y Oregon State LPI). Valores = una porción típica; el pico de
+// glucosa es una estimación fisiológica para un adulto pre-diabético (ayuno ~100).
+export interface MealCatalogItem {
+  name: string;
+  photo: string;
+  carbs: number;        // g
+  kcal: number;
+  protein: number;      // g
+  fat: number;          // g
+  load: GlucemicLoad;
+  predictedPeak: number; // mg/dL a ~60 min
+  ingredients: string;
+  note: string;          // razonamiento glucémico real
+  source: string;        // fuentes contrastadas
+}
+
+export const mealCatalog: Partial<Record<MealType, MealCatalogItem>> = {
+  Desayuno: {
+    name: "Pan con chicharrón + jugo de papaya",
+    photo: "/images/meals/pan_chicharron_jugo_papaya.jpg",
+    carbs: 110,
+    kcal: 950,
+    protein: 42,
+    fat: 45,
+    load: "Alta",
+    predictedPeak: 165,
+    ingredients:
+      "Pan francés, chicharrón de cerdo, camote frito, salsa criolla y jugo de papaya (~250 ml).",
+    note:
+      "El pan francés (IG ~95) y el azúcar del jugo elevan la glucosa rápido; la grasa del chicharrón solo retrasa un poco el pico.",
+    source: "Fitia · FatSecret · tablas de IG (Harvard, Oregon State LPI)",
+  },
+  Almuerzo: {
+    name: "Ceviche de pescado",
+    photo: "/images/meals/ceviche.jpg",
+    carbs: 50,
+    kcal: 410,
+    protein: 38,
+    fat: 8,
+    load: "Media",
+    predictedPeak: 135,
+    ingredients:
+      "Pescado fresco curado en limón, cebolla, ají, con camote, choclo y cancha.",
+    note:
+      "El pescado casi no aporta carbohidratos; el camote y el choclo (IG moderado) suben la glucosa de forma gradual, amortiguada por la proteína y la acidez del limón.",
+    source: "Fitia · MINSA · NutritionValue · tablas de IG",
+  },
+  Cena: {
+    name: "Arroz con pollo",
+    photo: "/images/meals/arroz_con_pollo.png",
+    carbs: 85,
+    kcal: 650,
+    protein: 30,
+    fat: 20,
+    load: "Alta",
+    predictedPeak: 155,
+    ingredients:
+      "Arroz graneado al culantro, presa de pollo, arvejas, zanahoria y pimiento.",
+    note:
+      "Una porción grande de arroz blanco (IG ~64–73) genera una carga glucémica alta; la proteína del pollo amortigua solo en parte el pico.",
+    source: "Fitia · MyFoodDiary · CarbManager",
+  },
 };
 
 export const projection5y = {

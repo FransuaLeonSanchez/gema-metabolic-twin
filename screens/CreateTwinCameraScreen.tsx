@@ -15,6 +15,7 @@ import type { ScreenId } from "@/lib/types";
 interface Props {
   onNav: (s: ScreenId) => void;
   setUserPhoto: (data: string | null) => void;
+  onSkip: () => void; // saltar onboarding → home con gemelo estándar
 }
 
 // ─── constants ────────────────────────────────────────────────────────────────
@@ -55,7 +56,7 @@ const PH_COLORS = [
 type Mode = "choose" | "camera" | "gallery";
 type CamState = "idle" | "live" | "captured" | "denied";
 
-export function CreateTwinCameraScreen({ onNav, setUserPhoto }: Props) {
+export function CreateTwinCameraScreen({ onNav, setUserPhoto, onSkip }: Props) {
   const [mode, setMode] = useState<Mode>("choose");
 
   // ── Camera state ──────────────────────────────────────────────────────────
@@ -321,11 +322,23 @@ export function CreateTwinCameraScreen({ onNav, setUserPhoto }: Props) {
   // ── Choose screen ─────────────────────────────────────────────────────────
   return (
     <div className="flex flex-col h-full px-5 pb-5">
-      <TopBar title="Crear mi gemelo" onBack={() => onNav("welcome")} />
+      <TopBar
+        title="Crear mi gemelo"
+        onBack={() => onNav("welcome")}
+        right={
+          <button
+            onClick={onSkip}
+            className="text-sub text-[12px] font-bold active:scale-95 whitespace-nowrap"
+          >
+            Saltar
+          </button>
+        }
+      />
 
       <p className="text-sub text-[13px] leading-snug mb-5">
-        Elige cómo crear tu gemelo. Tu foto solo se usa para inspirar su
-        apariencia; tú lo personalizas en el siguiente paso.
+        Elige cómo crear tu gemelo. Tu foto solo inspira su apariencia. ¿Con
+        prisa? Toca <span className="font-bold text-sub">Saltar</span> para entrar
+        con el gemelo estándar.
       </p>
 
       <div className="space-y-3">
@@ -347,11 +360,11 @@ export function CreateTwinCameraScreen({ onNav, setUserPhoto }: Props) {
         <OptionCard
           icon={<UserPlus size={20} />}
           color="#7C3AED"
-          title="Crear sin foto"
-          body="Diseña tu gemelo desde cero con el editor."
+          title="Continuar sin foto"
+          body="Usa el gemelo estándar y perfílalo con tus datos."
           onClick={() => {
             setUserPhoto(null);
-            onNav("customize");
+            onNav("profileForm");
           }}
         />
       </div>

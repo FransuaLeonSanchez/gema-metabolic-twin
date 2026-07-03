@@ -4,7 +4,6 @@ export type ScreenId =
   | "login"
   | "welcome"
   | "createTwin"
-  | "customize"
   | "twinGenerating"
   | "profileForm"
   | "pairDevice"

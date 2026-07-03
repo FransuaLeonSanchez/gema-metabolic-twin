@@ -20,6 +20,7 @@ import type { ScreenId } from "@/lib/types";
 
 interface Props {
   onNav: (s: ScreenId) => void;
+  onSkip: () => void; // saltar onboarding → home con gemelo estándar
 }
 
 interface FormState {
@@ -56,7 +57,7 @@ const HISTORY_OPTIONS = [
 
 const CITIES = ["Lima Metropolitana", "Callao", "Arequipa", "Trujillo", "Otra"];
 
-export function ProfileFormScreen({ onNav }: Props) {
+export function ProfileFormScreen({ onNav, onSkip }: Props) {
   const [data, setData] = useState<FormState>(EMPTY);
   const [autofilling, setAutofilling] = useState(false);
 
@@ -103,7 +104,18 @@ export function ProfileFormScreen({ onNav }: Props) {
   return (
     <div className="flex flex-col h-full">
       <div className="px-5 pt-2">
-        <TopBar title="Tus datos" onBack={() => onNav("customize")} />
+        <TopBar
+          title="Tus datos"
+          onBack={() => onNav("createTwin")}
+          right={
+            <button
+              onClick={onSkip}
+              className="text-sub text-[12px] font-bold active:scale-95 whitespace-nowrap"
+            >
+              Saltar
+            </button>
+          }
+        />
       </div>
 
       <div className="flex-1 overflow-y-auto scroll-hide px-5 pb-5">

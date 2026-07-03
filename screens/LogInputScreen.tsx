@@ -1,5 +1,5 @@
 "use client";
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Camera,
   ImagePlus,
@@ -23,7 +23,7 @@ import { Card } from "@/components/ui/Card";
 import { Pill } from "@/components/ui/Pill";
 import { Button } from "@/components/ui/Button";
 import { Sparkline } from "@/components/charts/Sparkline";
-import { glucoseDay } from "@/lib/mockData";
+import { glucoseDay, mealCatalog } from "@/lib/mockData";
 import type { GlucemicLoad, Meal, MealType, ScreenId } from "@/lib/types";
 
 interface Props {
@@ -44,11 +44,12 @@ const SLOTS: {
   { type: "Snack",    icon: Apple,  hint: "opcional",    color: "#16A34A" },
 ];
 
+// Estimación local de respaldo (solo para Snack, que no tiene plato real en la demo).
 const MOCK_DETECTION: Record<MealType, Omit<Meal, "type" | "time" | "photo">> = {
-  Desayuno: { name: "Pan con palta + jugo de papaya", carbs: 45, kcal: 320, load: "Media", predictedPeak: 128 },
-  Almuerzo: { name: "Arroz con pollo + ensalada",     carbs: 78, kcal: 540, load: "Alta",  predictedPeak: 158 },
-  Cena:     { name: "Quinua con verduras al wok",     carbs: 38, kcal: 310, load: "Baja",  predictedPeak: 112 },
-  Snack:    { name: "Plátano + frutos secos",         carbs: 28, kcal: 180, load: "Media", predictedPeak: 118 },
+  Desayuno: { name: "Pan con chicharrón + jugo de papaya", carbs: 110, kcal: 950, load: "Alta",  predictedPeak: 165 },
+  Almuerzo: { name: "Ceviche de pescado",                  carbs: 50,  kcal: 410, load: "Media", predictedPeak: 135 },
+  Cena:     { name: "Arroz con pollo",                     carbs: 85,  kcal: 650, load: "Alta",  predictedPeak: 155 },
+  Snack:    { name: "Plátano + frutos secos",              carbs: 28,  kcal: 180, load: "Media", predictedPeak: 118 },
 };
 
 const LOAD_COLOR: Record<GlucemicLoad, string> = {
@@ -59,7 +60,20 @@ const LOAD_COLOR: Record<GlucemicLoad, string> = {
 
 const loadIdx = (l: GlucemicLoad) => (l === "Baja" ? 0 : l === "Media" ? 1 : 2);
 
-type CapStage = "options" | "camera" | "analyzing" | "detected" | "denied";
+// Degradados claros para las miniaturas "placeholder" de la galería (estética foto-galería).
+const PH_COLORS = [
+  ["#E9EEF7", "#F6F8FC"],
+  ["#EFEBF7", "#F7F4FB"],
+  ["#F5ECEC", "#FBF5F5"],
+  ["#EBF2EC", "#F5FAF6"],
+  ["#F2EFE7", "#FAF7F0"],
+  ["#E9EEF6", "#F4F7FB"],
+  ["#F1EBF5", "#F9F4FB"],
+  ["#E7F2F1", "#F2FAF9"],
+  ["#F3ECE9", "#FAF5F2"],
+];
+
+type CapStage = "options" | "gallery" | "camera" | "analyzing" | "detected" | "denied";
 
 interface DetectionResult {
   name: string;
@@ -67,30 +81,13 @@ interface DetectionResult {
   kcal: number;
   load: GlucemicLoad;
   predictedPeak: number;
-  source: "gemini" | "local";
+  source: "catalog" | "local";
   confidence: number;
-}
-
-/** Llama a /api/analyze-meal con la foto. Devuelve null si Gemini no responde. */
-async function analyzeWithGemini(
-  photoDataUrl: string,
-  mealType: MealType,
-): Promise<DetectionResult | null> {
-  try {
-    const [head, base64] = photoDataUrl.split(",");
-    if (!base64) return null;
-    const mimeType = head.match(/data:(.*?);/)?.[1] ?? "image/jpeg";
-    const res = await fetch("/api/analyze-meal", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ imageBase64: base64, mimeType, mealType }),
-    });
-    const data = await res.json();
-    if (!data.ok) return null;
-    return { ...data.meal, source: "gemini" };
-  } catch {
-    return null;
-  }
+  protein?: number;
+  fat?: number;
+  ingredients?: string;
+  note?: string;
+  basis?: string;
 }
 
 export function LogInputScreen({ onNav, meals, setMeals }: Props) {
@@ -100,10 +97,10 @@ export function LogInputScreen({ onNav, meals, setMeals }: Props) {
   const [flash, setFlash] = useState(false);
   const [showDoneToast, setShowDoneToast] = useState<MealType | null>(null);
   const [result, setResult] = useState<DetectionResult | null>(null);
+  const [galSelected, setGalSelected] = useState<string | null>(null);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
-  const fileRef = useRef<HTMLInputElement>(null);
 
   const getMeal = (t: MealType) => meals.find((m) => m.type === t);
 
@@ -114,22 +111,36 @@ export function LogInputScreen({ onNav, meals, setMeals }: Props) {
   useEffect(() => () => stopCamera(), []);
 
   /**
-   * Análisis del plato: intenta Gemini primero (foto real → API route);
-   * si falla (sin créditos / sin red), cae a la estimación local por tipo de
-   * comida. Garantiza un mínimo de 1.2 s de "análisis" para que el loader
-   * se sienta natural.
+   * "Análisis" del plato. Para los platos con datos reales investigados
+   * (Desayuno/Almuerzo/Cena en mealCatalog) muestra esos valores verídicos;
+   * para el resto (Snack) cae a una estimación local. Se mantiene un mínimo
+   * de 1.2 s para que el loader se sienta natural.
    */
-  const analyze = async (photoDataUrl: string, mealType: MealType) => {
+  const analyzeMeal = (mealType: MealType, resolvedPhoto: string) => {
+    setPhoto(resolvedPhoto);
     setStage("analyzing");
-    const minDelay = new Promise((r) => setTimeout(r, 1200));
-    const detection = analyzeWithGemini(photoDataUrl, mealType);
-    const [, real] = await Promise.all([minDelay, detection]);
-    if (real && real.confidence > 0) {
-      setResult(real);
-    } else {
-      setResult({ ...MOCK_DETECTION[mealType], source: "local", confidence: 90 });
-    }
-    setStage("detected");
+    const dish = mealCatalog[mealType];
+    setTimeout(() => {
+      if (dish) {
+        setResult({
+          name: dish.name,
+          carbs: dish.carbs,
+          kcal: dish.kcal,
+          load: dish.load,
+          predictedPeak: dish.predictedPeak,
+          source: "catalog",
+          confidence: 97,
+          protein: dish.protein,
+          fat: dish.fat,
+          ingredients: dish.ingredients,
+          note: dish.note,
+          basis: dish.source,
+        });
+      } else {
+        setResult({ ...MOCK_DETECTION[mealType], source: "local", confidence: 90 });
+      }
+      setStage("detected");
+    }, 1200);
   };
 
   const openSlot = (t: MealType) => {
@@ -137,6 +148,7 @@ export function LogInputScreen({ onNav, meals, setMeals }: Props) {
     setStage("options");
     setPhoto(null);
     setResult(null);
+    setGalSelected(null);
   };
 
   const closeCapture = () => {
@@ -145,6 +157,7 @@ export function LogInputScreen({ onNav, meals, setMeals }: Props) {
     setStage("options");
     setPhoto(null);
     setResult(null);
+    setGalSelected(null);
   };
 
   const enableCamera = async () => {
@@ -164,11 +177,20 @@ export function LogInputScreen({ onNav, meals, setMeals }: Props) {
     }
   };
 
+  // La cámara está habilitada de verdad, pero al capturar se "reconoce" el
+  // plato del día para ese horario (igual que el flujo del avatar).
   const capture = () => {
     const v = videoRef.current;
-    if (!v) return;
+    if (!v || !selected) return;
     setFlash(true);
     setTimeout(() => setFlash(false), 260);
+    stopCamera();
+    const dish = mealCatalog[selected];
+    if (dish) {
+      analyzeMeal(selected, dish.photo);
+      return;
+    }
+    // Snack (sin plato real): usa el frame capturado.
     const canvas = document.createElement("canvas");
     const size = Math.min(v.videoWidth, v.videoHeight);
     canvas.width = size;
@@ -176,22 +198,7 @@ export function LogInputScreen({ onNav, meals, setMeals }: Props) {
     const sx = (v.videoWidth - size) / 2;
     const sy = (v.videoHeight - size) / 2;
     canvas.getContext("2d")?.drawImage(v, sx, sy, size, size, 0, 0, size, size);
-    const dataUrl = canvas.toDataURL("image/jpeg", 0.85);
-    setPhoto(dataUrl);
-    stopCamera();
-    if (selected) analyze(dataUrl, selected);
-  };
-
-  const handleFile = (e: ChangeEvent<HTMLInputElement>) => {
-    const f = e.target.files?.[0];
-    if (!f) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      const dataUrl = reader.result as string;
-      setPhoto(dataUrl);
-      if (selected) analyze(dataUrl, selected);
-    };
-    reader.readAsDataURL(f);
+    analyzeMeal(selected, canvas.toDataURL("image/jpeg", 0.85));
   };
 
   const registerMeal = () => {
@@ -239,7 +246,9 @@ export function LogInputScreen({ onNav, meals, setMeals }: Props) {
   if (selected) {
     const slot = SLOTS.find((s) => s.type === selected)!;
     const Icon = slot.icon;
-    const detected = result ?? { ...MOCK_DETECTION[selected], source: "local" as const, confidence: 90 };
+    const dish = mealCatalog[selected];
+    const detected =
+      result ?? { ...MOCK_DETECTION[selected], source: "local" as const, confidence: 90 };
 
     return (
       <div className="flex flex-col h-full px-5 pb-5">
@@ -252,25 +261,28 @@ export function LogInputScreen({ onNav, meals, setMeals }: Props) {
           >
             <X size={16} className="text-txt" />
           </button>
-          <div className="flex items-center gap-2">
-            <div
-              className="w-7 h-7 rounded-lg flex items-center justify-center"
-              style={{ backgroundColor: `${slot.color}22`, color: slot.color }}
-            >
-              <Icon size={14} />
+          <div className="flex flex-col items-center leading-none">
+            <span className="text-hint text-[9px] uppercase tracking-[0.22em] font-extrabold">
+              Kalorímetro
+            </span>
+            <div className="flex items-center gap-1.5 mt-1">
+              <div
+                className="w-5 h-5 rounded-md flex items-center justify-center"
+                style={{ backgroundColor: `${slot.color}22`, color: slot.color }}
+              >
+                <Icon size={12} />
+              </div>
+              <h1 className="text-txt text-[15px] font-extrabold">{selected}</h1>
             </div>
-            <h1 className="text-txt text-[16px] font-extrabold">{selected}</h1>
           </div>
           <div className="w-9" />
         </div>
 
-        <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFile} />
-
         {stage === "options" && (
           <>
             <p className="text-sub text-[13px] leading-snug mb-3">
-              Toma una foto a tu plato o sube una imagen. La IA estima la carga
-              glucémica y el pico de azúcar que generará.
+              Toma una foto a tu plato o súbela desde tu galería. Kalorímetro
+              estima la carga glucémica y el pico de azúcar que generará.
             </p>
 
             <div className="space-y-3">
@@ -286,8 +298,8 @@ export function LogInputScreen({ onNav, meals, setMeals }: Props) {
                 icon={<ImagePlus size={20} />}
                 color="#0D9488"
                 title="Cargar una imagen"
-                body="Sube una foto desde tu galería."
-                onClick={() => fileRef.current?.click()}
+                body="Elige la foto de tu plato desde tu galería."
+                onClick={() => setStage("gallery")}
               />
             </div>
 
@@ -299,6 +311,67 @@ export function LogInputScreen({ onNav, meals, setMeals }: Props) {
                   próximos 60–120 minutos.
                 </p>
               </div>
+            </div>
+          </>
+        )}
+
+        {stage === "gallery" && (
+          <>
+            <p className="text-sub text-[13px] leading-snug mb-3">
+              {dish
+                ? `Toca la foto de tu ${selected.toLowerCase()} para que Kalorímetro la analice.`
+                : "Aún no hay platos disponibles para snacks en esta demo."}
+            </p>
+
+            <div className="flex-1 overflow-y-auto scroll-hide">
+              <p className="text-txt text-[13px] font-extrabold mb-2">Recientes</p>
+              <div className="grid grid-cols-3 gap-1.5">
+                {dish && (
+                  <button
+                    onClick={() => setGalSelected(dish.photo)}
+                    className="relative aspect-square rounded-xl overflow-hidden border-2 transition-all active:scale-[0.97]"
+                    style={{
+                      borderColor: galSelected ? "#2563EB" : "transparent",
+                      boxShadow: galSelected ? "0 0 0 1px #2563EB" : "none",
+                    }}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={dish.photo} alt={dish.name} className="w-full h-full object-cover" />
+                    <span className="absolute bottom-1 left-1 bg-black/60 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">
+                      Hoy
+                    </span>
+                    {galSelected && (
+                      <div className="absolute inset-0 bg-brand-blue/20 flex items-end justify-end p-1.5">
+                        <CheckCircle2 size={20} className="text-brand-blue" />
+                      </div>
+                    )}
+                  </button>
+                )}
+                {Array.from({ length: dish ? 8 : 9 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="aspect-square rounded-xl"
+                    style={{
+                      background: `linear-gradient(135deg, ${PH_COLORS[i % PH_COLORS.length][0]}, ${PH_COLORS[i % PH_COLORS.length][1]})`,
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-3 space-y-3">
+              {dish && galSelected && (
+                <Button onClick={() => analyzeMeal(selected, dish.photo)}>Usar esta foto</Button>
+              )}
+              <Button
+                variant="ghost"
+                onClick={() => {
+                  setGalSelected(null);
+                  setStage("options");
+                }}
+              >
+                Volver
+              </Button>
             </div>
           </>
         )}
@@ -350,31 +423,50 @@ export function LogInputScreen({ onNav, meals, setMeals }: Props) {
               <>
                 <Card className="mt-3">
                   <div className="flex items-center justify-between mb-2">
-                    <Pill color={detected.source === "gemini" ? "#7C3AED" : "#2563EB"}>
+                    <Pill color={detected.source === "catalog" ? "#7C3AED" : "#2563EB"}>
                       <Sparkles size={10} />{" "}
-                      {detected.source === "gemini"
-                        ? "Analizado con Gemini"
-                        : "Detectado por IA"}
+                      {detected.source === "catalog" ? "Kalorímetro IA" : "Estimación local"}
                     </Pill>
                     <span className="text-hint text-[10px]">
                       {detected.confidence} % confianza
                     </span>
                   </div>
                   <p className="text-txt text-[15px] font-extrabold">{detected.name}</p>
+                  {detected.ingredients && (
+                    <p className="text-sub text-[11.5px] leading-snug mt-0.5">
+                      {detected.ingredients}
+                    </p>
+                  )}
                   <div className="grid grid-cols-3 gap-2 mt-3">
                     <Stat label="Carga" value={detected.load} color={LOAD_COLOR[detected.load]} />
                     <Stat label="Carbos" value={`${detected.carbs} g`} color="#0D9488" />
                     <Stat label="Energía" value={`${detected.kcal} kcal`} color="#2563EB" />
                   </div>
+                  {(detected.protein != null || detected.fat != null) && (
+                    <div className="grid grid-cols-2 gap-2 mt-2">
+                      <Stat label="Proteína" value={`${detected.protein} g`} color="#7C3AED" />
+                      <Stat label="Grasa" value={`${detected.fat} g`} color="#D97706" />
+                    </div>
+                  )}
                   <div className="mt-3 rounded-xl border border-brand-amber/40 bg-brand-amber/10 p-3 flex items-start gap-2">
-                    <Sparkles size={14} className="text-brand-amber mt-0.5" />
-                    <p className="text-txt text-[12px] leading-snug">
-                      <span className="text-brand-amber font-extrabold">Predicción del gemelo: </span>
-                      este plato podría subir tu glucosa a{" "}
-                      <span className="text-brand-amber font-extrabold">~{detected.predictedPeak} mg/dL</span>{" "}
-                      en 60 min.
-                    </p>
+                    <Sparkles size={14} className="text-brand-amber mt-0.5 shrink-0" />
+                    <div>
+                      <p className="text-txt text-[12px] leading-snug">
+                        <span className="text-brand-amber font-extrabold">Predicción del gemelo: </span>
+                        este plato podría subir tu glucosa a{" "}
+                        <span className="text-brand-amber font-extrabold">~{detected.predictedPeak} mg/dL</span>{" "}
+                        en 60 min.
+                      </p>
+                      {detected.note && (
+                        <p className="text-sub text-[11px] leading-snug mt-1">{detected.note}</p>
+                      )}
+                    </div>
                   </div>
+                  {detected.basis && (
+                    <p className="text-hint text-[9.5px] leading-snug mt-2">
+                      Datos: {detected.basis}
+                    </p>
+                  )}
                 </Card>
                 <div className="mt-3 space-y-3">
                   <Button onClick={registerMeal}>Registrar {selected.toLowerCase()}</Button>
@@ -384,10 +476,11 @@ export function LogInputScreen({ onNav, meals, setMeals }: Props) {
                     onClick={() => {
                       setPhoto(null);
                       setResult(null);
+                      setGalSelected(null);
                       setStage("options");
                     }}
                   >
-                    Volver a tomar
+                    Volver a elegir
                   </Button>
                 </div>
               </>
@@ -403,11 +496,11 @@ export function LogInputScreen({ onNav, meals, setMeals }: Props) {
             <div>
               <p className="text-txt text-[14px] font-extrabold">Cámara no disponible</p>
               <p className="text-sub text-[12px] leading-snug mt-1">
-                Permite el acceso a la cámara o sube una imagen desde tu galería.
+                Permite el acceso a la cámara o elige tu plato desde la galería.
               </p>
             </div>
-            <Button icon={<ImagePlus size={18} />} onClick={() => fileRef.current?.click()}>
-              Cargar imagen
+            <Button icon={<ImagePlus size={18} />} onClick={() => setStage("gallery")}>
+              Elegir desde galería
             </Button>
             <Button variant="ghost" onClick={enableCamera}>Reintentar cámara</Button>
           </div>
@@ -426,12 +519,17 @@ export function LogInputScreen({ onNav, meals, setMeals }: Props) {
         >
           <X size={16} className="text-txt" />
         </button>
-        <h1 className="text-txt text-[16px] font-extrabold">Tu día de comidas</h1>
+        <div className="flex items-center gap-1.5">
+          <div className="w-6 h-6 rounded-lg bg-brand-blue/15 text-brand-blue flex items-center justify-center">
+            <UtensilsCrossed size={13} />
+          </div>
+          <h1 className="text-txt text-[17px] font-extrabold tracking-tight">Kalorímetro</h1>
+        </div>
         <div className="w-9" />
       </div>
 
       <p className="text-sub text-[12px] mt-1 mb-3 leading-snug">
-        Registra cada comida para que tu gemelo prediga tu glucosa del día.
+        Registra cada comida y Kalorímetro predice tu glucosa del día.
       </p>
 
       {/* Day summary */}

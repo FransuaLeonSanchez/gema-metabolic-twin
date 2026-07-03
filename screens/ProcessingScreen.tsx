@@ -8,6 +8,7 @@ interface Props {
   onNav: (s: ScreenId) => void;
   appearance: TwinAppearance;
   useImage?: boolean;
+  onSkip: () => void; // saltar la calibración → home
 }
 
 const STEPS = [
@@ -18,7 +19,7 @@ const STEPS = [
   "Calibrando tu Índice de Carga Metabólica…",
 ];
 
-export function ProcessingScreen({ onNav, appearance, useImage = false }: Props) {
+export function ProcessingScreen({ onNav, appearance, useImage = false, onSkip }: Props) {
   const [step, setStep] = useState(0);
 
   useEffect(() => {
@@ -32,6 +33,14 @@ export function ProcessingScreen({ onNav, appearance, useImage = false }: Props)
 
   return (
     <div className="flex flex-col h-full px-6 pb-8">
+      <div className="flex justify-end pt-1">
+        <button
+          onClick={onSkip}
+          className="text-sub text-[12px] font-bold active:scale-95"
+        >
+          Saltar
+        </button>
+      </div>
       <div className="flex-1 flex flex-col items-center justify-center">
         <TwinAvatar mood="neutral" size={180} appearance={appearance} useImage={useImage} />
         <div className="mt-7 text-center">

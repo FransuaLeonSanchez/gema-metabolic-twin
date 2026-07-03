@@ -9,6 +9,7 @@ interface Props {
   onNav: (s: ScreenId) => void;
   appearance: TwinAppearance;
   useImage?: boolean;
+  onSkip: () => void; // saltar onboarding → home con gemelo estándar
 }
 
 const BULLETS = [
@@ -29,12 +30,12 @@ const BULLETS = [
   },
 ];
 
-export function WelcomeScreen({ onNav, appearance, useImage = false }: Props) {
+export function WelcomeScreen({ onNav, appearance, useImage = false, onSkip }: Props) {
   return (
     <div className="h-full overflow-y-auto scroll-hide flex flex-col px-6 pb-6">
       <div className="flex items-center justify-end pt-1 shrink-0">
         <button
-          onClick={() => onNav("createTwin")}
+          onClick={onSkip}
           className="text-sub text-[12px] font-bold active:scale-95"
         >
           Saltar

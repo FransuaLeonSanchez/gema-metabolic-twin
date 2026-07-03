@@ -5,7 +5,6 @@ import { TabBar } from "@/components/TabBar";
 import { LoginScreen } from "@/screens/LoginScreen";
 import { WelcomeScreen } from "@/screens/WelcomeScreen";
 import { CreateTwinCameraScreen } from "@/screens/CreateTwinCameraScreen";
-import { CustomizeTwinScreen } from "@/screens/CustomizeTwinScreen";
 import { PairDeviceScreen } from "@/screens/PairDeviceScreen";
 import { ProfileFormScreen } from "@/screens/ProfileFormScreen";
 import { TwinGenerationScreen } from "@/screens/TwinGenerationScreen";
@@ -34,7 +33,6 @@ const ONBOARDING: ScreenId[] = [
   "welcome",
   "createTwin",
   "twinGenerating",
-  "customize",
   "profileForm",
   "pairDevice",
   "processing",
@@ -91,6 +89,14 @@ export default function Page() {
     setAlertsRead(false);
   };
 
+  // Saltar el onboarding: entra directo al menú principal con el gemelo
+  // digital estándar (modelo 3D por defecto) sin foto ni personalización.
+  const skipToHome = () => {
+    setAppearance(DEFAULT_APPEARANCE);
+    setUseImage(true);
+    setScreen("home");
+  };
+
   return (
     <PhoneFrame>
       <div key={screen} className="h-full animate-[fadeIn_240ms_ease-out]">
@@ -98,40 +104,45 @@ export default function Page() {
           <LoginScreen onNav={setScreen} appearance={appearance} />
         )}
         {screen === "welcome" && (
-          <WelcomeScreen onNav={setScreen} appearance={appearance} useImage={useImage} />
+          <WelcomeScreen
+            onNav={setScreen}
+            appearance={appearance}
+            useImage={useImage}
+            onSkip={skipToHome}
+          />
         )}
         {screen === "createTwin" && (
-          <CreateTwinCameraScreen onNav={setScreen} setUserPhoto={setUserPhoto} />
+          <CreateTwinCameraScreen
+            onNav={setScreen}
+            setUserPhoto={setUserPhoto}
+            onSkip={skipToHome}
+          />
         )}
         {screen === "twinGenerating" && (
           <TwinGenerationScreen
             onNav={setScreen}
             onComplete={() => setUseImage(true)}
+            onSkip={skipToHome}
           />
         )}
-        {screen === "customize" && (
-          <CustomizeTwinScreen
-            onNav={setScreen}
-            onContinue={() => {
-              setPairReturnTo("processing");
-              setScreen("profileForm");
-            }}
-            appearance={appearance}
-            setAppearance={setAppearance}
-            userPhoto={userPhoto}
-            useImage={useImage}
-          />
+        {screen === "profileForm" && (
+          <ProfileFormScreen onNav={setScreen} onSkip={skipToHome} />
         )}
-        {screen === "profileForm" && <ProfileFormScreen onNav={setScreen} />}
         {screen === "pairDevice" && (
           <PairDeviceScreen
             onNav={setScreen}
             onPaired={setPairedDevice}
             returnTo={pairReturnTo}
+            onSkip={pairReturnTo === "profile" ? () => setScreen("profile") : skipToHome}
           />
         )}
         {screen === "processing" && (
-          <ProcessingScreen onNav={setScreen} appearance={appearance} useImage={useImage} />
+          <ProcessingScreen
+            onNav={setScreen}
+            appearance={appearance}
+            useImage={useImage}
+            onSkip={skipToHome}
+          />
         )}
         {screen === "home" && (
           <HomeScreen

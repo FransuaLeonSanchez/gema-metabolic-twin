@@ -7,6 +7,7 @@ import type { ScreenId } from "@/lib/types";
 interface Props {
   onNav: (s: ScreenId) => void;
   onComplete: () => void; // called when done → sets useImage = true in parent
+  onSkip: () => void;     // saltar todo el onboarding → home con gemelo estándar
 }
 
 const STEPS = [
@@ -23,7 +24,7 @@ const STATE_META = {
   tired:   { label: "En riesgo",  color: "#E11D48" },
 };
 
-export function TwinGenerationScreen({ onNav, onComplete }: Props) {
+export function TwinGenerationScreen({ onNav, onComplete, onSkip }: Props) {
   const [step, setStep] = useState(0);   // 0 = nothing done yet
   const [done, setDone] = useState(false);
 
@@ -42,6 +43,14 @@ export function TwinGenerationScreen({ onNav, onComplete }: Props) {
 
   return (
     <div className="flex flex-col h-full px-6 pb-8">
+      <div className="flex justify-end pt-1">
+        <button
+          onClick={onSkip}
+          className="text-sub text-[12px] font-bold active:scale-95"
+        >
+          Saltar
+        </button>
+      </div>
       <div className="flex-1 flex flex-col items-center justify-center">
 
         {/* Spinner or success icon */}
@@ -155,7 +164,7 @@ export function TwinGenerationScreen({ onNav, onComplete }: Props) {
         <Button
           onClick={() => {
             onComplete();
-            onNav("customize");
+            onNav("profileForm");
           }}
           icon={<Sparkles size={16} />}
         >

@@ -20,11 +20,12 @@ interface Props {
   onNav: (s: ScreenId) => void;
   onPaired: (d: PairedDevice) => void;
   returnTo: ScreenId;
+  onSkip: () => void; // saltar → destino según contexto (home en onboarding)
 }
 
 type Step = "searching" | "found" | "device" | "naming" | "success";
 
-export function PairDeviceScreen({ onNav, onPaired, returnTo }: Props) {
+export function PairDeviceScreen({ onNav, onPaired, returnTo, onSkip }: Props) {
   const [step, setStep] = useState<Step>("searching");
   const [name, setName] = useState(`Huawei Watch Fit 4 de ${mockUser.name}`);
   const device = pairingCatalog[0]; // Huawei Watch D2
@@ -62,7 +63,7 @@ export function PairDeviceScreen({ onNav, onPaired, returnTo }: Props) {
         </button>
         <h1 className="text-txt text-[16px] font-extrabold">Conectar dispositivo</h1>
         <button
-          onClick={() => onNav(returnTo)}
+          onClick={onSkip}
           className="text-sub text-[11px] font-bold inline-flex items-center gap-1 active:scale-95"
           aria-label="Saltar"
         >
