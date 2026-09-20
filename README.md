@@ -3,13 +3,13 @@
 > **Tu salud es una joya.** An interactive MVP for metabolic-risk awareness and personalized what-if guidance.
 
 <p align="center">
-  <a href="https://gemelo-digital.vercel.app"><img src="https://img.shields.io/badge/Live%20app-Vercel-000000?style=for-the-badge&logo=vercel" alt="Live app" /></a>
+  <a href="https://gema-metabolic-twin.vercel.app"><img src="https://img.shields.io/badge/Live%20app-Vercel-000000?style=for-the-badge&logo=vercel" alt="Live app" /></a>
   <a href="./modelo-predictivo"><img src="https://img.shields.io/badge/Research%20models-reproducible-2563EB?style=for-the-badge&logo=python&logoColor=white" alt="Research models" /></a>
   <img src="https://img.shields.io/badge/Next.js-14-111827?style=for-the-badge&logo=next.js" alt="Next.js 14" />
 </p>
 
 <p align="center">
-  <a href="https://gemelo-digital.vercel.app"><img src="reporte/landing.png" alt="GEMA product preview" /></a>
+  <a href="https://gema-metabolic-twin.vercel.app"><img src="reporte/landing.png" alt="GEMA product preview" /></a>
 </p>
 
 GEMA is a product and research prototype for a **metabolic digital twin**: it turns daily signals such as glucose, activity, sleep, stress, and nutrition into an interpretable **Índice de Carga Metabólica (ICM)**. The experience is designed for the Peruvian context and makes the model legible through an animated twin, risk explanations, and counterfactual scenarios.
@@ -18,7 +18,7 @@ GEMA is a product and research prototype for a **metabolic digital twin**: it tu
 
 ## Live product
 
-- **[Open the GEMA MVP](https://gemelo-digital.vercel.app)**
+- **[Open the GEMA MVP](https://gema-metabolic-twin.vercel.app)**
 - The Vercel project is connected to this repository as `gema-metabolic-twin`.
 - The demo is optimized for a mobile viewport inside a desktop browser.
 
