@@ -1,182 +1,147 @@
-# GEMA — Gemelo Digital Metabólico (MVP)
+# GEMA · Metabolic Digital Twin
 
-**GEMA** (GEmelo MetAbólico — "tu salud es una gema") es un MVP de app móvil de
-prevención del síndrome metabólico, renderizada dentro de un **marco de
-teléfono** en la web.
+> **Tu salud es una joya.** An interactive MVP for metabolic-risk awareness and personalized what-if guidance.
 
-> El corazón del producto es el **gemelo digital**: un avatar animado que cambia
-> de expresión, color y postura según el **Índice de Carga Metabólica (ICM)**
-> calculado a partir de 5 sub-índices (glucosa, actividad, sueño, estrés,
-> nutrición).
+<p align="center">
+  <a href="https://gemelo-digital.vercel.app"><img src="https://img.shields.io/badge/Live%20app-Vercel-000000?style=for-the-badge&logo=vercel" alt="Live app" /></a>
+  <a href="./modelo-predictivo"><img src="https://img.shields.io/badge/Research%20models-reproducible-2563EB?style=for-the-badge&logo=python&logoColor=white" alt="Research models" /></a>
+  <img src="https://img.shields.io/badge/Next.js-14-111827?style=for-the-badge&logo=next.js" alt="Next.js 14" />
+</p>
 
-## Qué es real y qué es simulado (estado actual del MVP)
+<p align="center">
+  <a href="https://gemelo-digital.vercel.app"><img src="reporte/landing.png" alt="GEMA product preview" /></a>
+</p>
 
-| Funcionalidad | Estado |
-|---|---|
-| Cámara (selfie del gemelo y foto del plato) | **Real** (getUserMedia) |
-| Análisis del plato con IA | **Real** — Gemini 2.0 Flash vía `/api/analyze-meal`; fallback local si la API no responde |
-| ICM recalculado al registrar comidas | **Real** (lógica local en `lib/icm.ts`) |
-| Simulador what-if | **Real** (modelo fisiológico local con fuentes) |
-| Modelo predictivo (Random Forest + GBM) | **Real y entrenado** — ver `modelo-predictivo/` |
-| Login Google, smartwatch BLE, sensor CGM | Simulados (mock visual) |
+GEMA is a product and research prototype for a **metabolic digital twin**: it turns daily signals such as glucose, activity, sleep, stress, and nutrition into an interpretable **Índice de Carga Metabólica (ICM)**. The experience is designed for the Peruvian context and makes the model legible through an animated twin, risk explanations, and counterfactual scenarios.
 
-## Artefactos del proyecto
+> **Research notice:** The predictive models currently use synthetic data and are not clinically validated. GEMA is an educational prototype, not a diagnostic tool or a substitute for medical care.
 
-- **App** — este repo (Next.js 14).
-- **Flujograma del sistema** — [docs/flujograma-gema.svg](docs/flujograma-gema.svg)
-  y [docs/flujograma-gema.png](docs/flujograma-gema.png) (regenerable con
-  `python3 docs/generar_flujograma.py`).
-- **Modelo predictivo** — [modelo-predictivo/](modelo-predictivo/): notebook
-  Colab, scripts de entrenamiento, modelos `.joblib` entrenados y
-  `DESCRIPCION_MODELO.txt` con inputs/outputs/resultados/referencias.
+## Live product
 
-## Análisis de comida con Gemini
+- **[Open the GEMA MVP](https://gemelo-digital.vercel.app)**
+- The Vercel project is connected to this repository as `gema-metabolic-twin`.
+- The demo is optimized for a mobile viewport inside a desktop browser.
 
-La clave vive en `.env.local` (`GEMINI_API_KEY`). La clave actual es válida
-pero su proyecto **agotó los créditos** (error 429): mientras tanto la app usa
-la estimación local automáticamente. Para activar el análisis real, genera una
-clave con free tier en <https://aistudio.google.com/apikey>, reemplázala en
-`.env.local` y reinicia el dev server. Sin cambios de código.
+## What the MVP demonstrates
 
----
+- 💎 A digital twin with three visible states: healthy, neutral, and at-risk.
+- 📊 An ICM from 0–100 built from five interpretable sub-indices: glucose, activity, sleep, stress, and nutrition.
+- 🍽️ Meal logging with local estimates and an optional Gemini-powered image-analysis route.
+- 🔁 A **what-if** simulator that shows how a change such as a post-meal walk can affect the projected outcome.
+- 📈 Progress, alerts, recommendations, a five-year projection, and a doctor-report concept.
+- 📱 A complete onboarding-to-dashboard flow with camera, wearable, and CGM touchpoints represented as MVP simulations.
 
-## Stack
+## Product gallery
 
-- **Next.js 14 (App Router)** + **React 18** + **TypeScript**
-- **Tailwind CSS** con tema oscuro
-- **lucide-react** para iconos
-- Animaciones con CSS keyframes (sin librerías pesadas)
-- Toda la lógica y los datos viven en `lib/mockData.ts` y `lib/icm.ts`
+These visuals come from the product prototype and the GEMA model presentation included in the repository.
 
-## Sistema de diseño
+<p align="center">
+  <img src="reporte/figs/fig_app.png" alt="GEMA application screens" width="48%" />
+  <img src="reporte/figs/fig_twin.png" alt="GEMA digital twin" width="48%" />
+</p>
 
-- **Tipografía:** Plus Jakarta Sans (Google Fonts), números tabulares en métricas.
-- **Superficies (4 niveles):** `page #04060C` → `bg #090D17` → `card #131A2C` → `card2 #1A2336`, con bordes sutiles `white/6-8%` en lugar de líneas duras.
-- **Color primario:** azul `#60A5FA`, con gradiente de marca `#3D7BF6 → #7C5CF6` para CTAs, FAB y estados activos.
-- **Colores semánticos (riesgo):** verde-teal `#2DD4BF` (bajo) · ámbar `#FBBF24` (moderado) · rosa `#FB7185` (alto). Solo se usan con significado, no como decoración.
-- **Colores de datos:** glucosa `#38BDF8` · actividad `#4ADE80` · sueño `#A78BFA` · estrés `#FB7185` · nutrición `#2DD4BF` (definidos en `lib/mockData.ts`).
-- **Componentes:** botones pill (`rounded-full`) con gradiente y glow, tarjetas `rounded-[20px]` con sombra suave, TabBar flotante con blur y FAB central, marco de teléfono con dynamic island y glows ambientales.
+<p align="center">
+  <img src="reporte/figs/fig_whatif.png" alt="GEMA what-if simulator" width="48%" />
+  <img src="modelo-predictivo/presentacion/img/pipeline_modelo.png" alt="GEMA model pipeline" width="48%" />
+</p>
 
-## Cómo correrlo (local)
+## Technical overview
+
+```mermaid
+flowchart LR
+    UI[Next.js mobile-first UI] --> ICM[lib/icm.ts\nICM + what-if logic]
+    UI --> API[/api/analyze-meal\noptional Gemini vision]
+    API --> Gemini[Google Gemini API]
+    Research[modelo-predictivo/] --> Models[Random Forest + Gradient Boosting]
+    Models -. research outputs .-> UI
+```
+
+### Stack
+
+- **Next.js 14 App Router**, React 18, TypeScript
+- **Tailwind CSS**, Framer Motion, Lucide icons
+- **Gemini** through a server-side Next.js route, with a local fallback when the API is unavailable
+- **scikit-learn**, pandas, joblib for the offline model experiments
+- Vercel-ready deployment with no custom server required for the frontend MVP
+
+### Current implementation boundary
+
+| Capability | Status |
+| --- | --- |
+| ICM calculation and what-if projection | Implemented locally in `lib/icm.ts` |
+| Meal image analysis | Implemented through `/api/analyze-meal`; falls back locally without a key or quota |
+| Risk classifier and glucose predictor | Reproducible offline experiments in `modelo-predictivo/`; trained with synthetic data |
+| Camera and avatar onboarding | Functional browser flow with prototype data and local assets |
+| Google login, BLE wearable sync, and CGM | Product-surface simulations for this MVP |
+
+The boundary is intentional: the repository shows the product interaction and the modeling pipeline without implying clinical or production readiness.
+
+## Model snapshot
+
+The research module documents two complementary baselines:
+
+1. **Random Forest classifier** for low, moderate, and high metabolic-risk classes.
+2. **Gradient Boosting regressor** for an estimated post-meal glucose peak.
+
+On the current synthetic evaluation set, the documented results are **88.5% accuracy** for the classifier and **6.3 mg/dL MAE / 0.914 R²** for the regressor. These are engineering benchmarks, not evidence of clinical performance. See [`modelo-predictivo/DESCRIPCION_MODELO.txt`](modelo-predictivo/DESCRIPCION_MODELO.txt) for assumptions, inputs, metrics, and references.
+
+## Run locally
 
 ```bash
-npm install
+npm ci
+copy .env.example .env.local  # PowerShell; use cp on macOS/Linux
 npm run dev
-# http://localhost:3000
 ```
 
-> Si alternaste antes entre `npm run build` y `npm run dev`, borra `.next/` para
-> evitar caché mixto: `rm -rf .next`.
+Open [http://localhost:3000](http://localhost:3000).
 
-## Deploy en Vercel
+For Gemini meal analysis, add this to `.env.local`:
 
-La app está pensada para desplegarse en Vercel sin configuración adicional.
-Si ves un **404 NOT_FOUND** o un HTML con solo `<div class="container">`, el
-problema es de configuración del proyecto en Vercel:
-
-1. **Root Directory.** Settings → General → **Root Directory** debe apuntar a la
-   carpeta donde vive `package.json`. Si subiste `gemelo-digital/` como
-   subcarpeta de un repo, escribe `gemelo-digital` aquí.
-   Si subiste el contenido de `gemelo-digital/` como raíz del repo, déjalo
-   vacío.
-2. **Framework Preset.** Debe ser **Next.js** (se autodetecta cuando hay
-   `next` en `package.json`).
-3. **Build Command / Output Directory.** Déjalos vacíos (Vercel usa
-   `next build` y `.next` por defecto).
-4. **Node version.** El `engines.node` del `package.json` exige Node ≥ 18.18.
-   Vercel usa Node 20 por defecto: compatible.
-
-Después de cambiar la Root Directory, dispara un **Redeploy** sin caché.
-
-> No incluimos `vercel.json` a propósito: Vercel autodetecta todo. Añadir uno
-> con valores incorrectos es la causa más común de despliegues vacíos.
-
-## Estructura
-
-```
-gemelo-digital/
-├── app/                # layout, página raíz (router de pantallas)
-├── components/
-│   ├── PhoneFrame.tsx
-│   ├── TabBar.tsx
-│   ├── Twin/           # avatar del gemelo (imagen o fallback SVG)
-│   ├── charts/         # ScoreRing, Sparkline, BarsWeek, DualLine
-│   └── ui/             # Card, Button, Slider, Pill, ProgressBar, etc.
-├── screens/            # 14 pantallas (una por archivo)
-├── lib/                # mockData, icm, types
-└── public/images/      # carpeta lista para que arrastres tus imágenes
+```env
+GEMINI_API_KEY=replace-me
 ```
 
-## Las 14 pantallas
+Without the key, the interface continues with its deterministic local estimate. Never commit `.env.local` or API keys.
 
-| # | Pantalla | Archivo |
-|---|---|---|
-| 1 | Splash / Bienvenida | `SplashScreen` |
-| 2 | Crear gemelo (cámara mock) | `CreateTwinCameraScreen` |
-| 3 | Personalizar gemelo | `CustomizeTwinScreen` |
-| 4 | Procesando | `ProcessingScreen` |
-| 5 | Home / Dashboard | `HomeScreen` |
-| 6 | Mi gemelo + simulador "¿Qué pasaría si…?" ⭐ | `TwinScreen` |
-| 7 | Registro diario (Comida · Sueño · Estrés) | `LogInputScreen` |
-| 8 | Progreso / historial | `ProgressScreen` |
-| 8b | Proyección a 5 años | `Projection5yScreen` |
-| 9 | Recomendaciones | `RecommendationsScreen` |
-| 10 | Alertas | `AlertsScreen` |
-| 11 | Detalle de sub-índice | `SubIndexDetailScreen` |
-| 12 | Reporte para el médico | `DoctorReportScreen` |
-| 13 | Perfil | `ProfileScreen` |
+## Reproduce the research model
 
-La **pantalla 6** es la estrella: al mover los sliders, el ICM proyectado se
-recalcula con `lib/icm.ts → projectICM()` y el gemelo cambia de color y
-expresión con una transición suave.
-
-## El gemelo
-
-`components/Twin/TwinAvatar.tsx` admite dos modos:
-
-1. **Fallback SVG (por defecto):** dibuja un avatar bonito (cara + torso +
-   aura pulsante + puntos de telemetría). 3 expresiones: `happy`, `neutral`,
-   `tired`. Funciona sin imágenes.
-2. **Imágenes reales (opcional):** apenas coloques
-   `public/images/twin/{happy,neutral,tired}.png` (fondo transparente,
-   ~600×600), edita el componente y pasa `useImage={true}` para que la app use
-   tus ilustraciones.
-
-Ver `public/images/README.md` para el listado completo de imágenes que la app
-puede usar y cómo deben llamarse.
-
-## Mock determinista
-
-Toda la "IA" se simula con `setTimeout` + valores fijos:
-
-- "Detectar plato" → 1.2 s de loader y devuelve `mockData.detectedMeal`.
-- "Calibrar gemelo" en onboarding → 4 pasos con check, ~3.5 s total.
-- "Descargar PDF" en reporte → toast de confirmación, no archivo real.
-
-La fórmula del ICM:
-
-```ts
-ICM = round(glucosa·0.35 + actividad·0.20 + sueño·0.20 + estrés·0.15 + nutrición·0.10)
-// 0–39 verde · 40–69 ámbar · 70–100 rojo
+```bash
+cd modelo-predictivo
+python -m venv .venv
+# macOS/Linux: source .venv/bin/activate
+# Windows PowerShell: .venv\\Scripts\\Activate.ps1
+pip install -r requirements.txt
+python entrenar_modelo.py
+python predecir.py
 ```
 
-## Checklist de la POC
+The notebook [`GEMA_modelo_predictivo.ipynb`](modelo-predictivo/GEMA_modelo_predictivo.ipynb) is also suitable for Google Colab. Generated evaluation plots and the model presentation are kept under `modelo-predictivo/presentacion/`.
 
-- [x] Next.js 14 + TS + Tailwind levantando con `npm run dev`
-- [x] Marco de celular con notch y barra de estado
-- [x] 14 pantallas navegables
-- [x] TabBar con botón **+** central; oculta en onboarding (1–4)
-- [x] Gemelo animado con 3 estados (respiración, flotar, aura, parpadeo)
-- [x] Simulador "¿Qué pasaría si…?" recalcula ICM y cambia el gemelo en vivo
-- [x] Mock de detección de plato + predicción glucémica
-- [x] Proyección a 5 años con 2 escenarios
-- [x] Reporte médico con botón "descargar" simulado
-- [x] `public/images/` con subcarpetas y README documentado
-- [x] Sin red, sin cámara real, sin APIs
-- [x] Español peruano, tono cercano
+## Repository map
 
-## Notas finales
+```text
+.
+├── app/                    # Next.js layout, page, and server route
+├── components/             # Phone frame, twin, charts, and UI primitives
+├── screens/                # Product screens used by the interactive flow
+├── lib/                    # Domain types, demo data, and ICM logic
+├── public/images/          # Product imagery and twin states
+├── modelo-predictivo/      # Synthetic-data experiments and trained baselines
+├── docs/                   # System flowchart and generator
+└── reporte/                # Research figures and supporting paper assets
+```
 
-- Si una imagen falta, **la app no se rompe**: usa fallback SVG o placeholder.
-- Los datos clave (ICM 59, pico 162 mg/dL, riesgo 23 %) son consistentes en
-  todas las pantallas porque vienen de `lib/mockData.ts`.
+## References and supporting material
+
+- [`docs/flujograma-gema.svg`](docs/flujograma-gema.svg) — system flow.
+- [`modelo-predictivo/`](modelo-predictivo/) — data generator, training scripts, metrics, and presentation graphics.
+- [`reporte/`](reporte/) — supporting paper figures and research artifacts.
+- Product narrative: **GEMA — Tu salud es una Joya** (“Your health is a gem”), reflected in the interface and the original product deck.
+
+## Deployment
+
+Vercel can deploy this repository with the Next.js preset and the default build settings. No `vercel.json` is required. Configure `GEMINI_API_KEY` only as a server-side Vercel environment variable when enabling the optional image-analysis route.
+
+## License
+
+No license file is currently included. Add a license before accepting external contributions or redistributing the code.
