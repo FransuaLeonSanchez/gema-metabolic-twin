@@ -16,11 +16,17 @@ GEMA is a product and research prototype for a **metabolic digital twin**: it tu
 
 > **Research notice:** The predictive models currently use synthetic data and are not clinically validated. GEMA is an educational prototype, not a diagnostic tool or a substitute for medical care.
 
-## Live product
+## Project snapshot
 
-- **[Open the GEMA MVP](https://gema-metabolic-twin.vercel.app)**
-- The Vercel project is connected to this repository as `gema-metabolic-twin`.
-- The demo is optimized for a mobile viewport inside a desktop browser.
+| Area | Details |
+| --- | --- |
+| **Live product** | [Open the GEMA MVP](https://gema-metabolic-twin.vercel.app) |
+| **Product scope** | Mobile-first metabolic-risk awareness, explainable scoring, and what-if guidance. |
+| **Research scope** | Synthetic-data baselines for risk classification and post-meal glucose estimation. |
+| **Runtime** | Next.js frontend with an optional server-side Gemini meal-analysis route. |
+| **Deployment** | Vercel, connected to the `main` branch of this repository. |
+
+The demo is optimized for a mobile viewport inside a desktop browser. It is intentionally presented as an inspectable MVP: the product flow is complete enough to explore, while clinical integrations and real patient data remain out of scope.
 
 ## What the MVP demonstrates
 
@@ -135,7 +141,7 @@ The notebook [`GEMA_modelo_predictivo.ipynb`](modelo-predictivo/GEMA_modelo_pred
 
 - [`docs/flujograma-gema.svg`](docs/flujograma-gema.svg) — system flow.
 - [`modelo-predictivo/`](modelo-predictivo/) — data generator, training scripts, metrics, and presentation graphics.
-- [`reporte/`](reporte/) — supporting paper figures and research artifacts.
+- [`reporte/`](reporte/) — the GEMA paper source, final PDF, and supporting figures.
 - Product narrative: **GEMA — Tu salud es una Joya** (“Your health is a gem”), reflected in the interface and the original product deck.
 
 ## Deployment
