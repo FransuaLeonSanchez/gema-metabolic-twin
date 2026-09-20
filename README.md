@@ -1,4 +1,4 @@
-# GEMA — Tu gemelo metabólico (MVP)
+# GEMA — Gemelo Digital Metabólico (MVP)
 
 **GEMA** (GEmelo MetAbólico — "tu salud es una gema") es un MVP de app móvil de
 prevención del síndrome metabólico, renderizada dentro de un **marco de
