@@ -55,11 +55,11 @@ These visuals come from the product prototype and the GEMA model presentation in
 
 ```mermaid
 flowchart LR
-    UI[Next.js mobile-first UI] --> ICM[lib/icm.ts\nICM + what-if logic]
-    UI --> API[/api/analyze-meal\noptional Gemini vision]
-    API --> Gemini[Google Gemini API]
-    Research[modelo-predictivo/] --> Models[Random Forest + Gradient Boosting]
-    Models -. research outputs .-> UI
+    UI["Next.js mobile-first UI"] --> ICM["ICM + what-if logic in lib/icm.ts"]
+    UI --> API["Meal analysis route /api/analyze-meal"]
+    API --> Gemini["Google Gemini API"]
+    Research["Predictive research in modelo-predictivo"] --> Models["Random Forest + Gradient Boosting"]
+    Models -.-> UI
 ```
 
 ### Stack
