@@ -144,9 +144,17 @@ The notebook [`GEMA_modelo_predictivo.ipynb`](modelo-predictivo/GEMA_modelo_pred
 - [`reporte/`](reporte/) — the GEMA paper source, final PDF, and supporting figures.
 - Product narrative: **GEMA — Tu salud es una Joya** (“Your health is a gem”), reflected in the interface and the original product deck.
 
-## Deployment
+## Verification and deployment
 
-Vercel can deploy this repository with the Next.js preset and the default build settings. No `vercel.json` is required. Configure `GEMINI_API_KEY` only as a server-side Vercel environment variable when enabling the optional image-analysis route.
+Pull requests and pushes to `main` run [the repository workflow](.github/workflows/ci.yml) on Node 20. It installs the lockfile, type-checks the TypeScript sources, and builds the production app. The same checks can be reproduced locally:
+
+```bash
+npm ci
+npx tsc --noEmit
+npm run build
+```
+
+Vercel deploys this repository with the Next.js preset and the default build settings. No `vercel.json` is required. Configure `GEMINI_API_KEY` only as a server-side Vercel environment variable when enabling the optional image-analysis route; the public preview does not require a key for its deterministic fallback.
 
 ## License
 
